@@ -8,3 +8,5 @@ And for the technical documentation of this VFD click [here](/Assets/VFD.pdf)
 Find out more about this project on https://jurjan.info
 
 ![vfd](/Assets/IMG_5674.JPG)
+![vfd](/Assets/IMG_4308.JPG)
+
