@@ -21,15 +21,14 @@ namespace WebAPI.Services
             {
                 if (item.properties.road == "A28")
                 {
-                    DisplayItem displayItem = new DisplayItem
+                    displayItems.Add(new DisplayItem
                     {
                         Date = DateTime.Now,
                         Line1 = String.Format("{0} op {1}", Translate(item.properties.type_description), item.properties.road),
                         Line2 = String.Format("{0} {1}", item.properties.location, item.properties.direction),
                         DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
                         Delay = 1000
-                    };
-                    displayItems.Add(displayItem);
+                    });
                 }
             }
 
@@ -59,6 +58,9 @@ namespace WebAPI.Services
                     break;
                 case "trafficjam":
                     output = "File";
+                    break;
+                case "obstruction":
+                    output = "Obstructie";
                     break;
                 default:
                     break;
