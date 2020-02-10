@@ -62,6 +62,9 @@ namespace WebAPI.Services
                 case "obstruction":
                     output = "Obstructie";
                     break;
+                case "slippery":
+                    output = "Glad";
+                    break;
                 default:
                     break;
             }
