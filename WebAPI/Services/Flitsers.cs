@@ -19,7 +19,8 @@ namespace WebAPI.Services
 
             foreach (var item in stuff.features)
             {
-                if (item.properties.road == "A28")
+                // groter dan 6.460000, 53.000000
+                if (item.properties.road == "A28" && (float)item.geometry.coordinates[0] > 6.460000 && (float)item.geometry.coordinates[1] > 53.000000)
                 {
                     displayItems.Add(new DisplayItem
                     {

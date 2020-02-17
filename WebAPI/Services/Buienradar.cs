@@ -20,7 +20,7 @@ namespace WebAPI.Services
             displayItems.Add(new DisplayItem
             {
                 Date = DateTime.Now,
-                Line1 = "Temp: " + stuff.forecast.fivedayforecast[0].maxtemperature + "c wind: " + stuff.forecast.fivedayforecast[0].wind,
+                Line1 = stuff.actual.stationmeasurements[12].temperature + "C " + stuff.actual.stationmeasurements[12].weatherdescription,
                 Line2 = stuff.forecast.fivedayforecast[0].weatherdescription,
                 DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
                 Delay = 2000
