@@ -48,4 +48,4 @@ The returned JSON contains the following elements:
 If this project help you reduce time to develop, you can give me a cup of coffee :)
 
 # Donation Button
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FEAWWGSBYLMZL)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=FEAWWGSBYLMZL&currency_code=EUR&source=url)
