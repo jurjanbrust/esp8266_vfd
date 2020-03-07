@@ -21,24 +21,25 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<DisplayItem> Get()
+        public async System.Threading.Tasks.Task<IEnumerable<DisplayItem>> GetAsync()
         {
             TestData testdata= new TestData();
-            _logger.LogInformation("Testdata");
             Buienradar buienradar = new Buienradar(_logger);
-            _logger.LogInformation("Buienradar");
             Flitsers flitsers = new Flitsers(_logger);
-            _logger.LogInformation("Flitsers");
-
+            Agenda agenda = new Agenda(_logger);
+            Fitbit fitbit = new Fitbit(_logger);
+            
             try
             {
                 //_displayItems.AddRange(testdata.Refresh());
+                _displayItems.AddRange(await fitbit.RefreshAsync());
                 _displayItems.AddRange(buienradar.Refresh());
                 _displayItems.AddRange(flitsers.Refresh());
+                _displayItems.AddRange(await agenda.RefreshAsync());
             }
             catch (Exception e)
             {
-                _logger.LogError(e.Message);
+                _logger.LogError(e.Message + e.StackTrace);
             }
 
             return _displayItems;

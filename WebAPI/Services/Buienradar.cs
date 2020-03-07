@@ -14,15 +14,17 @@ namespace WebAPI.Services
 
         public List<DisplayItem> Refresh()
         {
+            logger.LogInformation("Refreshing buienradar");
+
             List<DisplayItem> displayItems = new List<DisplayItem>();
             dynamic stuff = GetJson("https://data.buienradar.nl/2.0/feed/json");
 
             displayItems.Add(new DisplayItem
             {
                 Date = DateTime.Now,
-                Line1 = stuff.actual.stationmeasurements[12].temperature + "C " + stuff.actual.stationmeasurements[12].weatherdescription,
-                Line2 = stuff.forecast.fivedayforecast[0].weatherdescription,
-                DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
+                Line1 = (int)stuff.actual.stationmeasurements[12].temperature + "'C " + stuff.actual.stationmeasurements[12].weatherdescription,
+                Line2 = ((String)stuff.forecast.weatherreport.title).Replace("&nbsp;", ""),
+                DisplayMode = DisplayItem.DisplayModeEnum.FadeInOut,
                 Delay = 2000
             });
 
@@ -30,7 +32,7 @@ namespace WebAPI.Services
             {
                 Date = DateTime.Now,
                 Line1 = "Weersverwachting",
-                Line2 = stuff.forecast.shortterm.forecast,
+                Line2 = ((String)stuff.forecast.weatherreport.summary).Replace("&nbsp;", ""),
                 DisplayMode = DisplayItem.DisplayModeEnum.VerticalScroll,
                 Delay = 2000
             });
