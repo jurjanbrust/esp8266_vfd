@@ -22,9 +22,10 @@ The Web-API contains all the logic to gather and prepare the information that ne
 Currently the WEB-API gathers the following kinds of information: 
 * weather forecast
 * traffic information
+* calendar (central family)
+* fitbit (weight goals of me and my partner)
 
 Other possible future things to add are:
-* calendar (central family)
 * Tesla car status (charge level, location)
 
 ![vfd](/Assets/Scheme.png)
@@ -39,11 +40,13 @@ The returned JSON contains the following elements:
 * date: datetime of the information
 * line1: first line to display on the VFD
 * line2: second line to display on the VFD
-* displaymode: the way the information needs to be dislayed on the VFD (see enum in the sourcecode). 
+* displaymode: the way the information needs to be displayed on the VFD (see enum in the sourcecode). 
     For example:
     * horizontal scroll
     * vertical scroll
     * knightrider mode. 
+
+The WebAPI uses OAuth 2.0 for both the Graph API and Fitbit API. I only implemented the refresh-token logic, so there is no Authorization logic (using the Microsoft.Owin library). Instead I used [Postman](https://www.postman.com/downloads/) to get my user authorization code, access code and refresh token. You can [read more about this here](https://docs.microsoft.com/en-us/graph/auth-register-app-v2). As instructed in the code you only need to enter these tokens once... The WebAPI will store and update the tokens into AzureKeyVault on its own.
 
 If this project help you reduce time to develop, you can give me a cup of coffee :)
 
