@@ -14,31 +14,42 @@ namespace WebAPI.Services
 
         public List<DisplayItem> Refresh()
         {
+            logger.LogInformation("Refreshing flitsers");
+
             List<DisplayItem> displayItems = new List<DisplayItem>();
             dynamic stuff = GetJson("https://tesla.flitsmeister.nl/teslaFeed.json");
-
+            int i = 0;
             foreach (var item in stuff.features)
             {
-                // groter dan 6.460000, 53.000000
-                if (item.properties.road == "A28" && (float)item.geometry.coordinates[0] > 6.460000 && (float)item.geometry.coordinates[1] > 53.000000)
+                i++;
+                try
                 {
-                    displayItems.Add(new DisplayItem
+                    float longitude = (item.geometry.coordinates[0].Type == Newtonsoft.Json.Linq.JTokenType.Float) ? item.geometry.coordinates[0] : item.geometry.coordinates[0][0];
+                    float latitude = (item.geometry.coordinates[0].Type == Newtonsoft.Json.Linq.JTokenType.Float) ? item.geometry.coordinates[1] : item.geometry.coordinates[0][1];
+                    if (item.properties.road == "A28" && longitude > 6.460000 && latitude > 53.000000)
                     {
-                        Date = DateTime.Now,
-                        Line1 = String.Format("{0} op {1}", Translate(item.properties.type_description), item.properties.road),
-                        Line2 = String.Format("{0} {1}", item.properties.location, item.properties.direction),
-                        DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
-                        Delay = 1000
-                    });
+                        displayItems.Add(new DisplayItem
+                        {
+                            Date = DateTime.Now,
+                            Line1 = String.Format("{0} op {1}", Translate(item.properties.type_description), item.properties.road),
+                            Line2 = String.Format("{0} {1}", item.properties.location, item.properties.direction),
+                            DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
+                            Delay = 1000
+                        });
+                    }
                 }
-            }
+                catch (Exception e)
+                {
+                    logger.LogError("Flitsers: " + e.Message + e.StackTrace);
+                }
 
+            }
             return displayItems;
         }
 
         private string Translate(dynamic input)
         {
-            if(input == null)
+            if (input == null)
             {
                 return string.Empty;
             }
