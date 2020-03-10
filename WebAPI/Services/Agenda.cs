@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace WebAPI.Services
         private const int CALENDAR_DAYS_LOOKAHEAD_2 = 2;
         private const int CALENDAR_DAYS_LOOKAHEAD_3 = 3;
         private const int CALENDAR_DAYS_LOOKAHEAD_7 = 7;
+        private const int MAX_ITEMS_TO_RETURN = 6;
 
         private static List<Rootobject_Calendar> calendarItems;
         private static List<string> queries;
@@ -102,7 +104,7 @@ namespace WebAPI.Services
             {
                 logger.LogError("Agenda: " + e.Message + e.StackTrace);
             }
-            return displayItems;
+            return displayItems.OrderBy(x => x.Date).Take(MAX_ITEMS_TO_RETURN).ToList();
         }
 
         private List<DisplayItem> CreateDisplayItem(Rootobject_Calendar calendarItem)
@@ -138,7 +140,7 @@ namespace WebAPI.Services
 
                 displayItems.Add(new DisplayItem
                 {
-                    Date = DateTime.Now,
+                    Date = time,
                     Line1 = firstLine,
                     Line2 = secondLine,
                     DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
