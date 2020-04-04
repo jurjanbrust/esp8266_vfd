@@ -27,6 +27,10 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+launchSettings.json
+ConnectedService.json
+Key Vault
+Properties
 Private
 .vscode
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.KeyVault.Models;
 using Microsoft.Azure.Services.AppAuthentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace WebAPI.Helpers
 {
@@ -26,24 +26,28 @@ namespace WebAPI.Helpers
         public Dictionary<string, Keys> keys;
         protected AzureServiceTokenProvider azureServiceTokenProvider;
         protected KeyVaultClient keyVaultClient;
+        protected IConfiguration Configuration { get; set; }
+        private readonly string KeyVaultUrl;
 
-        public KeyVault()
+        public KeyVault(IConfiguration configuration)
         {
             azureServiceTokenProvider = new AzureServiceTokenProvider();
             keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
             keys = new Dictionary<string, Keys>();
+
+            KeyVaultUrl = configuration.GetSection("AzureWebUrl").Value;
         }
 
         public async Task SetSecretAsync(string keyName, string keyValue)
         {
-            await keyVaultClient.SetSecretAsync("https://[Place keyvault here].vault.azure.net", keyName, keyValue);
+            await keyVaultClient.SetSecretAsync(KeyVaultUrl, keyName, keyValue);
         }
 
         public async Task<string> GetSecret(string keyName)
         {
             try
             {
-                var secret = await keyVaultClient.GetSecretAsync("https://[Place keyvault here].vault.azure.net/secrets/" + keyName).ConfigureAwait(false);
+                var secret = await keyVaultClient.GetSecretAsync($"{KeyVaultUrl}/secrets/" + keyName).ConfigureAwait(false);
                 return secret.Value;
             }
             catch (Exception)

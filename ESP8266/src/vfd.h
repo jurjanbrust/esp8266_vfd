@@ -68,7 +68,10 @@ public:
   void fadeOut();
   void fadeIn();
   void knightRider();
-  void knightRiderMode2();
+  void L2R();
+  void R2L();
+  void knightRider2();
+  void knightRider3();
 private:
   // 0x19 = command operation
   // 0x30 = set level

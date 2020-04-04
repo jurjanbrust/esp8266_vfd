@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace WebAPI.Services
         private static List<string> queries;
         private readonly CultureInfo culture = new CultureInfo("nl-NL");
 
-        public Agenda(ILogger<DisplayController> logger) : base(logger)
+        public Agenda(ILogger<DisplayController> logger, IConfiguration configuration) : base(logger, configuration)
         {
             logger.LogInformation("Refreshing agenda");
             this.logger = logger;
@@ -53,21 +54,21 @@ namespace WebAPI.Services
 
             string query1 = String.Format("https://graph.microsoft.com/v1.0/me/calendars('AQMkADAwATE0YjEwLWFhADY2AC04MTJlLTAwAi0wMAoARgAAA6pTgb6w9M5IrqmqSLezaHIHANFVJ6ZDePlEroLNqPG9X4cAAAIBBgAAANFVJ6ZDePlEroLNqPG9X4cAAAGW6loAAAA=')/calendarview?startdatetime={0}&enddatetime={1}",
                                     DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
-                                    DateTime.Now.AddDays(CALENDAR_DAYS_LOOKAHEAD_3).ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+                                    DateTime.Now.AddDays(CALENDAR_DAYS_LOOKAHEAD_7).ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
 
             string query2 = String.Format("https://graph.microsoft.com/v1.0/me/calendarview?startdatetime={0}&enddatetime={1}",
                                     DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
-                                    DateTime.Now.AddDays(CALENDAR_DAYS_LOOKAHEAD_3).ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+                                    DateTime.Now.AddDays(CALENDAR_DAYS_LOOKAHEAD_7).ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
 
             string query3 = "https://graph.microsoft.com/v1.0/me/calendars('AQMkADAwATM0MDAAMS1mYTliLTgxMDItMDACLTAwCgBGAAAD3J4hd426JkeLiDCyHDVBkgcABhvvQclRTUGa5USHwWs0QAAAAgEGAAAABhvvQclRTUGa5USHwWs0QAAAAhT2AAAA')/calendarview?" +
                              "startdatetime=" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ") +
-                             "&enddatetime=" + DateTime.Now.AddDays(CALENDAR_DAYS_LOOKAHEAD_3).ToString("yyyy-MM-ddTHH:mm:ss.fffZ") +
+                             "&enddatetime=" + DateTime.Now.AddDays(CALENDAR_DAYS_LOOKAHEAD_7).ToString("yyyy-MM-ddTHH:mm:ss.fffZ") +
                              "&$orderby=Start/DateTime" +
                              "&$top" + 1;
 
             queries.Add(query1);
             queries.Add(query2);
-            queries.Add(query3);
+            //queries.Add(query3);
         }
 
         public async Task<List<DisplayItem>> RefreshAsync()
@@ -104,6 +105,13 @@ namespace WebAPI.Services
             {
                 logger.LogError("Agenda: " + e.Message + e.StackTrace);
             }
+
+            if(displayItems.Count == 0)
+            {
+
+                displayItems.Add(new DisplayItem { Date = DateTime.Now, Line1 = "Geen komende agenda", Line2 = "afspraken.", DisplayMode = DisplayItem.DisplayModeEnum.Normal });
+            } 
+
             return displayItems.OrderBy(x => x.Date).Take(MAX_ITEMS_TO_RETURN).ToList();
         }
 
@@ -114,29 +122,31 @@ namespace WebAPI.Services
             List<DisplayItem> displayItems = new List<DisplayItem>();
 
             if (calendarItem == null) return null;
+
             foreach (var item in calendarItem.value)
             {
-                DateTime time = ((DateTime)item.Start.DateTime).ToLocalTime();
+                DateTime time = item.Start.DateTime.AddHours(2);        // TODO timezone, zomertijd/wintertijd...
                 string dag;
                 if (time.Date == DateTime.Today)
                 {
-                    dag = "vandaag";
+                    dag = "Vandaag";
                 }
                 else if (time.Date == DateTime.Now.AddDays(1).Date)
                 {
-                    dag = "morgen";
+                    dag = "Morgen";
                 }
                 else if (time.Date == DateTime.Now.AddDays(2).Date)
                 {
-                    dag = "overmorgen";
+                    dag = "Overmorgen";
                 }
                 else
                 {
-                    dag = time.ToString("dddd", culture);
+                    dag = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(time.ToString("dddd", culture));
                 }
 
-                firstLine = dag + " " + time.ToString("dd MMM", culture).ToString().Trim();
-                secondLine = (time.ToString("HH:mm", culture).Replace("00:00", "").Replace("01:00", "").Replace("02:00", "") + " " + (string)item.Subject).Trim();
+                string subject = item.Subject.Trim().Replace('é', 'e');
+                firstLine = dag + " " + time.ToString("dd MMMM", culture).ToString().Trim();
+                secondLine = (time.ToString("HH:mm", culture).Replace("00:00", "").Replace("01:00", "").Replace("02:00", "") + " " + subject);
 
                 displayItems.Add(new DisplayItem
                 {

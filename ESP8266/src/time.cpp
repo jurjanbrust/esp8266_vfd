@@ -2,7 +2,7 @@
 #include "vfd.h"
 
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 600000);
+NTPClient timeClient(ntpUDP, "nl.pool.ntp.org", 3600*2, 600000);
 String space = " ";
 
 TIMEDISPLAY::TIMEDISPLAY(VFD& vfd)

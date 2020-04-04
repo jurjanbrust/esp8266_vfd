@@ -5,7 +5,7 @@
 #include "webapi.h"
 #include "vfd.h"
 #include "time.h"
-
+#include "secret.h"
 //#define DEBUG
 
 #ifndef DEBUG_PRINT
@@ -21,7 +21,7 @@ DynamicJsonDocument _doc(4000);
 Webserver::Webserver(VFD& vfd) {
 
     this->_vfd = &vfd;
-    _host = "[yoururl].azurewebsites.net";
+    _host = azureWebAPI;  // place URL of your webAPI here: [yoururl].azurewebsites.net
     _feed = "/display";
 }
 
@@ -90,7 +90,6 @@ void Webserver::start() {
   DEBUG_PRINT(_doc.size());
   for(uint i=0; i<_doc.size();i++) {
     _vfd->clear();
-    
     displaymode = _doc[i]["displayMode"].as<int>();
     line1 = _doc[i]["line1"].as<String>();
     line2 = _doc[i]["line2"].as<String>();
@@ -104,10 +103,11 @@ void Webserver::start() {
       _vfd->fixed(line1);
       _vfd->fixed(line2);
     }
-
+    //_vfd->R2L();
+    //_vfd->fadeIn();
     delay(_doc[i]["delay"].as<int>());
+    //_vfd->L2R();
     _vfd->knightRider();
-    _vfd->fadeIn();
   }
   _vfd->clear();
 }

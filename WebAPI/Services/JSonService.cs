@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,10 @@ namespace WebAPI.Services
         protected ILogger<DisplayController> logger;
         protected KeyVault keyVault;
 
-        public JSonService(ILogger<DisplayController> logger)
+        public JSonService(ILogger<DisplayController> logger, IConfiguration configuration)
         {
             httpClient = new HttpClient();
-            keyVault = new KeyVault();
+            keyVault = new KeyVault(configuration);
 
             httpClient.Timeout = new TimeSpan(0, 0, 10);
             this.logger = logger;
