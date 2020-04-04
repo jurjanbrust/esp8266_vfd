@@ -27,6 +27,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+*.Development.json
 launchSettings.json
 ConnectedService.json
 Key Vault

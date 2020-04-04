@@ -21,7 +21,59 @@ void TIMEDISPLAY::start()
         timeClient.update();
         this->_vfd->home();
         String time = timeClient.getFormattedTime();
+
+        time_t rawtime = timeClient.getEpochTime();
+        struct tm * ti;
+        ti = localtime (&rawtime);
+
         int day = timeClient.getDay();
+
+        uint16_t year = ti->tm_year + 1900;
+        String yearStr = String(year);
+
+        uint8_t month = ti->tm_mon + 1;
+        String monthStr = month < 10 ? "0" + String(month) : String(month);
+        
+        switch(month) {
+            case 1 :
+                monthStr = "Januari";
+                break;
+            case 2 :
+                monthStr = "Februari";
+                break;
+            case 3 :
+                monthStr = "Maart";
+                break;
+            case 4 :
+                monthStr = "April";
+                break;
+            case 5 :
+                monthStr = "Mei";
+                break;
+            case 6 :
+                monthStr = "Juni";
+                break;
+            case 7 :
+                monthStr = "Juli";
+                break;
+            case 8 :
+                monthStr = "Augustus";
+                break;
+            case 9 :
+                monthStr = "September";
+                break;
+            case 10 :
+                monthStr = "Oktober";
+                break;
+            case 11 :
+                monthStr = "November";
+                break;
+            case 12 :
+                monthStr = "December";
+                break;
+        }
+
+        String dayStr = ti->tm_mday < 10 ? "0" + String(ti->tm_mday) : String(ti->tm_mday);
 
         String dayAsText;
         switch(day) {
@@ -47,7 +99,8 @@ void TIMEDISPLAY::start()
                 dayAsText = space + "Zaterdag" + space + time + space + space;
                 break;
         }
-        this->_vfd->send(dayAsText);
+        this->_vfd->fixed(dayAsText);
+        this->_vfd->centered(dayStr + " " + monthStr + " " + yearStr);
         this->_vfd->command(vfd_cursorOff);
         delay(100);
     }

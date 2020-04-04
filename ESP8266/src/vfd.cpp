@@ -56,6 +56,21 @@ void VFD::fixed(String value)
     send(value);
 }
 
+void VFD::centered(String value)
+{
+    int length = (19 - value.length()) / 2;
+    String prefix = "";
+    if(length > 1) {
+      for(int i = 0; i<length; i++) {
+        prefix = prefix + " ";
+      }
+    }
+    value = prefix + value;
+    value = value.substring(0, 20);
+    send(value);
+}
+
+
 void VFD::command(const char* value) 
 {
   Serial.write(value);

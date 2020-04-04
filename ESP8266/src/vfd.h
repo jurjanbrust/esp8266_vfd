@@ -60,6 +60,7 @@ public:
   void typeWriteHorizontal(String);
   void typeWriteVertical(String);
   void fixed(String);
+  void centered(String);
   void clear();
   void linefeed();
   void carriagereturn();
