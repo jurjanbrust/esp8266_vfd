@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
@@ -11,7 +12,7 @@ namespace WebAPI.Services
 {
     public class Fitbit : JSonService
     {
-        public Fitbit(ILogger<DisplayController> logger) : base(logger)
+        public Fitbit(ILogger<DisplayController> logger, IConfiguration configuration) : base(logger, configuration)
         {
             this.logger = logger;
 

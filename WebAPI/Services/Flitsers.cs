@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using WebAPI.Controllers;
@@ -8,7 +9,7 @@ namespace WebAPI.Services
 {
     public class Flitsers : JSonService
     {
-        public Flitsers(ILogger<DisplayController> logger) : base(logger)
+        public Flitsers(ILogger<DisplayController> logger, IConfiguration configuration) : base(logger, configuration)
         {
         }
 

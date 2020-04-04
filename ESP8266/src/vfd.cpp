@@ -106,7 +106,7 @@ void VFD::writeAndDelay(uint8_t data[], int ms)
 
 void VFD::fadeIn()
 {
-  int ms = 120;
+  int ms = 100;
   writeAndDelay(brightness7, ms);
   writeAndDelay(brightness6, ms);
   writeAndDelay(brightness5, ms);
@@ -114,17 +114,19 @@ void VFD::fadeIn()
   writeAndDelay(brightness3, ms);
   writeAndDelay(brightness2, ms);
   writeAndDelay(brightness1, ms);
+  writeAndDelay(brightness0, ms);
 }
 
 void VFD::fadeOut()
 {
-  int ms = 120;
+  int ms = 100;
   writeAndDelay(brightness0, ms);
   writeAndDelay(brightness1, ms);
   writeAndDelay(brightness2, ms);
   writeAndDelay(brightness3, ms);
   writeAndDelay(brightness4, ms);
   writeAndDelay(brightness5, ms);
+  writeAndDelay(brightness6, ms);
   writeAndDelay(brightness7, ms);
 }
 
@@ -135,7 +137,7 @@ void VFD::knightRider()
   uint8_t brightness[4]  = { 0x19, 0x30, 0x00, 0x00 };
   int speed = 50;
   fadeOut();
-  delay(2000);
+  delay(50);
 
   // van links naar rechts
   for (int index = 0; index < 20; index++)
@@ -161,11 +163,98 @@ void VFD::knightRider()
       }
       brightness[levelindex] = (uint8_t)level;
       writeAndDelay(brightness, speed);
-  }  
+  }
+  //delay(50);
+  fadeIn();
 }
 
+void VFD::knightRider2()
+{
+  const int positionindex = 2; // index of array that contains the position
+  const int levelindex = 3; // index of array that contains the brightness
+  uint8_t brightness[4]  = { 0x19, 0x30, 0x00, 0x00 };
+  int speed = 50;
+  fadeIn();
+  delay(100);
 
-void VFD::knightRiderMode2()
+  // van links naar rechts
+  for (int index = 0; index < 20; index++)
+  {
+      int level = 0 + index;
+      brightness[positionindex] = (uint8_t)index;
+      if(level > 7) {
+        level=7;
+      }
+      if(level < 0) {
+        level = 0;
+      }
+      brightness[levelindex] = (uint8_t)level;
+      writeAndDelay(brightness, speed);
+  }
+
+  for (int index = 19; index >= 0; index--)
+  {
+      int level = index;
+      brightness[positionindex] = (uint8_t)index;
+      if(level > 7) {
+        level=7;
+      }
+      brightness[levelindex] = (uint8_t)level;
+      writeAndDelay(brightness, speed);
+  }
+  //delay(50);
+  fadeIn();
+}
+
+void VFD::L2R()
+{
+  const int positionindex = 2; // index of array that contains the position
+  const int levelindex = 3; // index of array that contains the brightness
+
+  uint8_t brightness[4]  = { 0x19, 0x30, 0x00, 0x00 };
+  uint8_t level[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  int speed = 10;
+  
+  // van links naar rechts
+  for (int i = 0; i < 20; i++)
+  {
+      for (int j = 0 ; j < 20; j++)
+      {
+        if(level[j] < 7) {
+          level[j]++;       
+        }
+        brightness[positionindex] = (uint8_t)j;
+        brightness[levelindex] = (uint8_t)level[j];
+        writeAndDelay(brightness, speed);
+      }
+  }
+}
+
+void VFD::R2L()
+{
+  const int positionindex = 2; // index of array that contains the position
+  const int levelindex = 3; // index of array that contains the brightness
+
+  uint8_t brightness[4]  = { 0x19, 0x30, 0x00, 0x00 };
+  uint8_t level[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  int speed = 50;
+  
+  // van rechts naar links
+  for (int i = 19; i >= 0; i--)
+  {
+      for (int j = 19; j >=0; j--)
+      {
+        if(level[j] > 0) {
+          level[j]--;       
+        }
+        brightness[positionindex] = (uint8_t)j;
+        brightness[levelindex] = (uint8_t)level[j];
+        writeAndDelay(brightness, speed);
+      }
+  }
+}
+
+void VFD::knightRider3()
 {
   const int positionindex = 2; // index of array that contains the position
   const int levelindex = 3; // index of array that contains the brightness
@@ -217,18 +306,4 @@ void VFD::knightRiderMode2()
       Serial.write(index);
       writeAndDelay(combined, speed);
   }
-
-  // for (int index = 19; index >= 0; index--)
-  // {
-  //     int level = 7 - index;
-  //     brightness[positionindex] = (uint8_t)index;
-  //     if(level > 7) {
-  //       level=7;
-  //     }
-  //     if(level < 0) {
-  //       level = 0;
-  //     }
-  //     brightness[levelindex] = (uint8_t)level;
-  //     writeAndDelay(brightness, speed);
-  // }  
 }
