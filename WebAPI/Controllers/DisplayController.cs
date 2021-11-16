@@ -26,16 +26,20 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async System.Threading.Tasks.Task<IEnumerable<DisplayItem>> GetAsync()
         {
-            TestData testdata= new TestData();
+            //TestData testdata = new TestData();
+            //Fitbit fitbit = new Fitbit(_logger, _configuration);
+            RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech");
+            RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen");
             Buienradar buienradar = new Buienradar(_logger, _configuration);
             Flitsers flitsers = new Flitsers(_logger, _configuration);
             Agenda agenda = new Agenda(_logger, _configuration);
-            Fitbit fitbit = new Fitbit(_logger, _configuration);
             
             try
             {
                 //_displayItems.AddRange(testdata.Refresh());
-                _displayItems.AddRange(await fitbit.RefreshAsync());
+                //_displayItems.AddRange(await fitbit.RefreshAsync());
+                _displayItems.AddRange(tech.Refresh());
+                _displayItems.AddRange(nieuws.Refresh());
                 _displayItems.AddRange(buienradar.Refresh());
                 _displayItems.AddRange(flitsers.Refresh());
                 _displayItems.AddRange(await agenda.RefreshAsync());
