@@ -29,7 +29,7 @@ namespace WebAPI.Services
                 Date = DateTime.Now,
                 Line1 = station.temperature + "'C " + station.weatherdescription,
                 Line2 = shortterm.forecast,
-                DisplayMode = DisplayItem.DisplayModeEnum.FadeInOut,
+                DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
                 Delay = 6000
             });
 
