@@ -36,8 +36,8 @@ namespace WebAPI.Services
             {
                 Date = DateTime.Now,
                 Line1 = post.Title.Text,
-                Line2 = post.Summary.Text,
-                DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
+                Line2 = "",
+                DisplayMode = DisplayItem.DisplayModeEnum.VerticalScroll,
                 Delay = 2000
             });
 

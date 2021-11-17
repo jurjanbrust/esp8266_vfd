@@ -2,13 +2,13 @@
 #include <WiFiManager.h>         //https://github.com/tzapu/WiFiManager
 #include "vfd.h"
 #include "test.h"
-#include "time.h"
+#include "timedisplay.h"
 #include "webapi.h"
 
 VFD vfd;
 TESTDISPLAY test(vfd);
 TIMEDISPLAY tijd(vfd);
-Webserver webserver(vfd);
+WEBAPI api(vfd);
 
 //#define TEST
 void loop() {
@@ -20,9 +20,9 @@ void loop() {
     #ifndef TEST
     for(int i=0; i<=10; i++) {
         if(i==0) {
-            webserver.update();
+            api.update();
         }
-        webserver.start();
+        api.start();
         tijd.start();
     }
     #endif
@@ -49,7 +49,7 @@ void setup() {
 
     if(WiFi.isConnected()) {
         vfd.clear();
-        vfd.typeWriteHorizontal("Verbonden met WiFi");
+        vfd.typeWriteHorizontal("Connected to WiFi");
         vfd.enter();
         vfd.typeWriteHorizontal(WiFi.localIP().toString());
     }

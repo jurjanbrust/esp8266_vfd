@@ -1,4 +1,4 @@
-#include "time.h"
+#include "timedisplay.h"
 #include "vfd.h"
 
 WiFiUDP ntpUDP;
@@ -99,8 +99,10 @@ void TIMEDISPLAY::start()
                 dayAsText = space + "Zaterdag" + space + time + space + space;
                 break;
         }
-        this->_vfd->fixed(dayAsText);
-        this->_vfd->centered(dayStr + " " + monthStr + " " + yearStr);
+        this->_vfd->send(dayAsText);
+        this->_vfd->home();
+        this->_vfd->linefeed();
+        this->_vfd->send("  " + dayStr + " " + monthStr + " " + yearStr);
         this->_vfd->command(vfd_cursorOff);
         delay(100);
     }

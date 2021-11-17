@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WebAPI.Controllers;
 using WebAPI.Helpers;
+using WebAPI.Models;
 
 namespace WebAPI.Services
 {
@@ -30,6 +31,12 @@ namespace WebAPI.Services
         {
             string result = GetStringAsync(url);
             return JsonConvert.DeserializeObject(result);
+        }
+
+        public T GetJson<T>(string url)
+        {
+            string result = GetStringAsync(url);
+            return JsonConvert.DeserializeObject<T>(result);
         }
 
         public string GetStringAsync(string url)

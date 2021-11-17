@@ -1,7 +1,7 @@
+#include <Arduino.h>
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
-#include "Arduino.h"
 #include "vfd.h"
 
 VFD::VFD() 
@@ -58,18 +58,14 @@ void VFD::fixed(String value)
 
 void VFD::centered(String value)
 {
-    int length = (19 - value.length()) / 2;
-    String prefix = "";
-    if(length > 1) {
-      for(int i = 0; i<length; i++) {
-        prefix = prefix + " ";
-      }
-    }
-    value = prefix + value;
-    value = value.substring(0, 20);
-    send(value);
-}
+    int width = 20;
+    int len = value.length();
+    if(width < len) { send(value); }
 
+    int diff = width - len;
+    int pad = diff/2;
+    return send(String(pad, ' ') + value);
+}
 
 void VFD::command(const char* value) 
 {
@@ -87,7 +83,7 @@ void VFD::typeWriteVertical(String line)
 {
   command(vfd_cursorOn);
   command(vfd_setVerticalScrollMode);
-  for(uint i=0; i<line.length();i++) {
+  for(unsigned int i=0; i<line.length();i++) {
     send(line.charAt(i),70);
   }
   command(vfd_cursorOff);
@@ -97,7 +93,7 @@ void VFD::typeWriteHorizontal(String line)
 {
   command(vfd_cursorOn);
   command(vfd_SetHorizontalScrollMode);
-  for(uint i=0; i<line.length();i++) {
+  for(unsigned int i=0; i<line.length();i++) {
     send(line.charAt(i),70);
   }
   command(vfd_cursorOff);

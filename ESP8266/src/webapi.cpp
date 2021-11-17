@@ -10,7 +10,7 @@
 
 #ifndef DEBUG_PRINT
   #ifdef DEBUG
-    #define DEBUG_PRINT(x)  Serial.println (x)
+    #define DEBUG_PRINT(x)  Serial.println (x); delay(1000);
   #else
     #define DEBUG_PRINT(x)
   #endif
@@ -18,14 +18,14 @@
 
 DynamicJsonDocument _doc(4000);
 
-Webserver::Webserver(VFD& vfd) {
+WEBAPI::WEBAPI(VFD& vfd) {
 
     this->_vfd = &vfd;
-    _host = azureWebAPI;  // place URL of your webAPI here: [yoururl].azurewebsites.net
+    _host = azureWebAPI;
     _feed = "/display";
 }
 
-void Webserver::update() {
+void WEBAPI::update() {
 
   WiFiClientSecure httpsClient;
   httpsClient.setInsecure();
@@ -45,35 +45,32 @@ void Webserver::update() {
                "Host: " + _host + "\r\n" +
                "Connection: close\r\n\r\n");
 
-  DEBUG_PRINT("request sent");
 
+  DEBUG_PRINT("headers:");
   while (httpsClient.connected()) {
     _json = httpsClient.readStringUntil('\n');
+    DEBUG_PRINT(_json);
     if (_json == "\r") {
-      DEBUG_PRINT("headers received");
-      DEBUG_PRINT(_json);
       break;
     }
   }
+  
   httpsClient.readStringUntil('\n'); // The API sends an extra line with just a number. This breaks the JSON parsing, hence an extra read
-  DEBUG_PRINT("start reply json:");
   while(httpsClient.connected()){
     _json = httpsClient.readString();
     DEBUG_PRINT(_json);
   }
-  DEBUG_PRINT("end reply json");
-  //httpsClient.readStringUntil('\n'); // The API sends an extra line with just a number. This breaks the JSON parsing, hence an extra read
+
   DeserializationError err = deserializeJson(_doc,_json);
   if (err) {
     _vfd->clear();
     _vfd->typeWriteHorizontal("deserializeJson failed");
+    delay(5000);
   }
-  delay(1000);
-  DEBUG_PRINT("size: ");
-  DEBUG_PRINT(_doc.size());
+  DEBUG_PRINT("size: " + _doc.size());
 }
 
-void Webserver::start() {
+void WEBAPI::start() {
 
   enum mode {Normal,
             FadeInOut,
@@ -88,14 +85,15 @@ void Webserver::start() {
 
   DEBUG_PRINT("display data, size: ");
   DEBUG_PRINT(_doc.size());
-  for(uint i=0; i<_doc.size();i++) {
+  for(unsigned int i=0; i<_doc.size();i++) {
     _vfd->clear();
+    
     displaymode = _doc[i]["displayMode"].as<int>();
     line1 = _doc[i]["line1"].as<String>();
     line2 = _doc[i]["line2"].as<String>();
 
     if(displaymode == VerticalScroll) {
-        _vfd->typeWriteVertical(line1 + ": " + line2);
+        _vfd->typeWriteVertical(line1 + line2);
     } else if(displaymode == HorizontalScroll) {
         _vfd->fixed(line1);
         _vfd->typeWriteHorizontal(line2);
@@ -103,11 +101,8 @@ void Webserver::start() {
       _vfd->fixed(line1);
       _vfd->fixed(line2);
     }
-    //_vfd->R2L();
-    //_vfd->fadeIn();
+
     delay(_doc[i]["delay"].as<int>());
-    //_vfd->L2R();
-    _vfd->knightRider();
   }
   _vfd->clear();
 }

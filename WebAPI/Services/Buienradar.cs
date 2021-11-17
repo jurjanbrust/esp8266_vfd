@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebAPI.Controllers;
 using WebAPI.Models;
 
@@ -18,24 +19,18 @@ namespace WebAPI.Services
             logger.LogInformation("Refreshing buienradar");
 
             List<DisplayItem> displayItems = new List<DisplayItem>();
-            dynamic stuff = GetJson("https://data.buienradar.nl/2.0/feed/json");
+            Rootobject json = GetJson<Rootobject>("https://data.buienradar.nl/2.0/feed/json");
+            var station = json.actual.stationmeasurements.First(s => s.stationid == 6279);
+            var shortterm = json.forecast.shortterm;
+            var forecast = json.forecast.weatherreport.summary;
 
             displayItems.Add(new DisplayItem
             {
                 Date = DateTime.Now,
-                Line1 = (int)stuff.actual.stationmeasurements[12].temperature + "'C " + stuff.actual.stationmeasurements[12].weatherdescription,
-                Line2 = ((String)stuff.forecast.weatherreport.title).Replace("&nbsp;", ""),
+                Line1 = station.temperature + "'C " + station.weatherdescription,
+                Line2 = shortterm.forecast,
                 DisplayMode = DisplayItem.DisplayModeEnum.FadeInOut,
-                Delay = 2000
-            });
-
-            displayItems.Add(new DisplayItem
-            {
-                Date = DateTime.Now,
-                Line1 = "Weersverwachting",
-                Line2 = ((String)stuff.forecast.weatherreport.summary).Replace("&nbsp;", ""),
-                DisplayMode = DisplayItem.DisplayModeEnum.VerticalScroll,
-                Delay = 2000
+                Delay = 6000
             });
 
             return displayItems;

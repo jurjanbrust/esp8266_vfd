@@ -1,5 +1,4 @@
-#ifndef VFD_h
-#define VFD_h
+#pragma once
 
 #include <inttypes.h>
 #include "Print.h"
@@ -73,6 +72,7 @@ public:
   void R2L();
   void knightRider2();
   void knightRider3();
+  
 private:
   // 0x19 = command operation
   // 0x30 = set level
@@ -87,5 +87,3 @@ private:
   uint8_t brightness7[4] = { 0x19, 0x30, 0xFF, 0x07 }; // dimmest
   uint8_t crlf[2] = { 0x0D, 0x0A };
 };
-
-#endif

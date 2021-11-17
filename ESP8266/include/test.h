@@ -1,5 +1,4 @@
-#ifndef TEST_h
-#define TEST_h
+#pragma once
 
 #include "vfd.h"
 #include <Arduino.h>
@@ -15,5 +14,3 @@ class TESTDISPLAY {
     void scrollText();
     void knightRider();
 };
-
-#endif

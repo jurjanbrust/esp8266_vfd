@@ -1,5 +1,4 @@
-#ifndef TIME_h
-#define TIME_h
+#pragma once
 
 #include "vfd.h"
 #include <NTPClient.h>
@@ -13,5 +12,3 @@ class TIMEDISPLAY {
     TIMEDISPLAY(VFD& vfd);
     void start();
 };
-
-#endif

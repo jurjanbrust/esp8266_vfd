@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using WebAPI.Models;
 using WebAPI.Services;
+using Buienradar = WebAPI.Services.Buienradar;
 
 namespace WebAPI.Controllers
 {
