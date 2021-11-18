@@ -30,8 +30,8 @@ namespace WebAPI.Controllers
             //TestData testdata = new TestData();
             //Fitbit fitbit = new Fitbit(_logger, _configuration);
             RssFeed tweakers = new RssFeed(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary);
-            RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Title);
-            RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Title);
+            RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary);
+            RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary);
             Buienradar buienradar = new Buienradar(_logger, _configuration);
             Flitsers flitsers = new Flitsers(_logger, _configuration);
             Agenda agenda = new Agenda(_logger, _configuration);

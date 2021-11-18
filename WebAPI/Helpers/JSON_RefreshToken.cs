@@ -1,5 +1,4 @@
-﻿
-public class Rootobject_RefreshToken
+﻿public class Rootobject_RefreshToken
 {
     public string token_type { get; set; }
     public string scope { get; set; }

@@ -1,11 +1,8 @@
-﻿
-using System;
-
+﻿using System;
 public class Rootobject_Calendar
 {
     public Value[] value { get; set; }
 }
-
 public class Value
 {
     public string Id { get; set; }
