@@ -14,11 +14,19 @@ namespace WebAPI.Services
 
         protected ILogger<DisplayController> logger;
         private readonly string url;
+        private Display option;
 
-        public RssFeed(ILogger<DisplayController> logger, string url)
+        public enum Display
+        {
+            Title,
+            Summary
+        }
+
+        public RssFeed(ILogger<DisplayController> logger, string url, Display option)
         {
             this.logger = logger;
             this.url = url;
+            this.option = option;
         }
 
         public List<DisplayItem> Refresh()
@@ -31,11 +39,21 @@ namespace WebAPI.Services
             var feed = SyndicationFeed.Load(reader);
             var post = feed.Items.FirstOrDefault();
             reader.Close();
+            string text = string.Empty;
+            switch (option)
+            {
+                case Display.Title:
+                    text = post.Title.Text;
+                    break;
+                case Display.Summary:
+                    text = post.Summary.Text;
+                    break;
+            }
 
             displayItems.Add(new DisplayItem
             {
                 Date = DateTime.Now,
-                Line1 = post.Title.Text,
+                Line1 = text,
                 Line2 = "",
                 DisplayMode = DisplayItem.DisplayModeEnum.VerticalScroll,
                 Delay = 2000

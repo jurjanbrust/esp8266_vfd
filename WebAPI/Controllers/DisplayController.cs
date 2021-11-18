@@ -29,8 +29,9 @@ namespace WebAPI.Controllers
         {
             //TestData testdata = new TestData();
             //Fitbit fitbit = new Fitbit(_logger, _configuration);
-            RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech");
-            RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen");
+            RssFeed tweakers = new RssFeed(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary);
+            RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Title);
+            RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Title);
             Buienradar buienradar = new Buienradar(_logger, _configuration);
             Flitsers flitsers = new Flitsers(_logger, _configuration);
             Agenda agenda = new Agenda(_logger, _configuration);
@@ -39,6 +40,7 @@ namespace WebAPI.Controllers
             {
                 //_displayItems.AddRange(testdata.Refresh());
                 //_displayItems.AddRange(await fitbit.RefreshAsync());
+                _displayItems.AddRange(tweakers.Refresh());
                 _displayItems.AddRange(tech.Refresh());
                 _displayItems.AddRange(nieuws.Refresh());
                 _displayItems.AddRange(buienradar.Refresh());
