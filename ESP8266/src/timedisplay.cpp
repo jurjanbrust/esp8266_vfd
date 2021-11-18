@@ -9,7 +9,7 @@ TIMEDISPLAY::TIMEDISPLAY(VFD& vfd)
 {
     this->_vfd = &vfd;
     timeClient.begin();
-    timeClient.update();
+    timeClient.setTimeOffset(3600);
     this->_vfd->clear();
     this->_vfd->command(vfd_cursorOff);
 }
