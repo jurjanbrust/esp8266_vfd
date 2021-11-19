@@ -7,6 +7,7 @@ using WebAPI.Controllers;
 using WebAPI.Models;
 using System.ServiceModel.Syndication;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace WebAPI.Services
 {
@@ -40,6 +41,7 @@ namespace WebAPI.Services
             var post = feed.Items.FirstOrDefault();
             reader.Close();
             string text = string.Empty;
+
             switch (option)
             {
                 case Display.Title:
@@ -49,7 +51,7 @@ namespace WebAPI.Services
                     text = post.Summary.Text;
                     break;
             }
-
+            text = Regex.Replace(text, @"<[^>]*>", String.Empty);
             displayItems.Add(new DisplayItem
             {
                 Date = DateTime.Now,
