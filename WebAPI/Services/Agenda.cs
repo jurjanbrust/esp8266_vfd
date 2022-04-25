@@ -96,6 +96,7 @@ namespace WebAPI.Services
                     }
                     else
                     {
+                        displayItems.Add(new DisplayItem { Date = DateTime.Now, Line1 = "Agenda foutmelding", Line2 = "Log opnieuw in", DisplayMode = DisplayItem.DisplayModeEnum.Normal, Delay = 2000 });
                         logger.LogError("RefreshCalendarItems failed: " + httpResponse.StatusCode);
                     }
                 }
@@ -108,7 +109,7 @@ namespace WebAPI.Services
             if(displayItems.Count == 0)
             {
 
-                displayItems.Add(new DisplayItem { Date = DateTime.Now, Line1 = "Geen komende agenda", Line2 = "afspraken.", DisplayMode = DisplayItem.DisplayModeEnum.Normal });
+                displayItems.Add(new DisplayItem { Date = DateTime.Now, Line1 = "Geen komende agenda", Line2 = "afspraken.", DisplayMode = DisplayItem.DisplayModeEnum.Normal, Delay=2000 });
             } 
 
             return displayItems.OrderBy(x => x.Date).Take(MAX_ITEMS_TO_RETURN).ToList();
@@ -143,7 +144,9 @@ namespace WebAPI.Services
                     dag = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(time.ToString("dddd", culture));
                 }
 
-                string subject = item.Subject.Trim().Replace('é', 'e');
+                string subject = item.Subject.Trim();
+                subject = Textual.RemoveDiacritics(subject);
+
                 firstLine = dag + " " + time.ToString("dd MMMM", culture).ToString().Trim();
                 secondLine = (time.ToString("HH:mm", culture).Replace("00:00", "").Replace("01:00", "").Replace("02:00", "") + " " + subject);
 

@@ -7,7 +7,7 @@
   "ExtendedData": {
     "PublishEnvironmentProperties": {
       "KeyVaultName": [
-        "[place keyvault here]"
+        "https://kv-vfd-prod.vault.azure.net"
       ]
     }
   }

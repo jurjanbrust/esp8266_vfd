@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Xml;
-using WebAPI.Controllers;
-using WebAPI.Models;
-using System.ServiceModel.Syndication;
 using System.Linq;
+using WebAPI.Models;
+using WebAPI.Helpers;
+using WebAPI.Controllers;
+using System.ServiceModel.Syndication;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace WebAPI.Services
 {
@@ -52,6 +52,10 @@ namespace WebAPI.Services
                     break;
             }
             text = Regex.Replace(text, @"<[^>]*>", String.Empty);
+
+            // remove accents from string: é, û.... and so on
+            text = Textual.RemoveDiacritics(text);
+
             displayItems.Add(new DisplayItem
             {
                 Date = DateTime.Now,

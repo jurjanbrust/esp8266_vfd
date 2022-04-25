@@ -40,12 +40,12 @@ namespace WebAPI.Controllers
             {
                 //_displayItems.AddRange(testdata.Refresh());
                 //_displayItems.AddRange(await fitbit.RefreshAsync());
+                _displayItems.AddRange(await agenda.RefreshAsync());
                 _displayItems.AddRange(tweakers.Refresh());
                 _displayItems.AddRange(tech.Refresh());
                 _displayItems.AddRange(nieuws.Refresh());
                 _displayItems.AddRange(buienradar.Refresh());
                 _displayItems.AddRange(flitsers.Refresh());
-                _displayItems.AddRange(await agenda.RefreshAsync());
             }
             catch (Exception e)
             {

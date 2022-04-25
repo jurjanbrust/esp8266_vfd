@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using WebAPI.Controllers;
 using WebAPI.Models;
+using WebAPI.Helpers;
 
 namespace WebAPI.Services
 {
@@ -32,8 +33,8 @@ namespace WebAPI.Services
                         displayItems.Add(new DisplayItem
                         {
                             Date = DateTime.Now,
-                            Line1 = String.Format("{0} op {1}", Translate(item.properties.type_description), item.properties.road),
-                            Line2 = String.Format("{0} {1}", item.properties.location, item.properties.direction),
+                            Line1 = Textual.RemoveDiacritics(String.Format("{0} op {1}", Translate(item.properties.type_description), item.properties.road)),
+                            Line2 = Textual.RemoveDiacritics(String.Format("{0} {1}", item.properties.location, item.properties.direction)),
                             DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
                             Delay = 1000
                         });

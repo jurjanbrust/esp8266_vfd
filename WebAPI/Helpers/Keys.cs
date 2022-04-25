@@ -5,6 +5,7 @@ using Microsoft.Azure.Services.AppAuthentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace WebAPI.Helpers
 {
@@ -29,13 +30,16 @@ namespace WebAPI.Helpers
         protected IConfiguration Configuration { get; set; }
         private readonly string KeyVaultUrl;
 
-        public KeyVault(IConfiguration configuration)
+        public KeyVault(Microsoft.Extensions.Logging.ILogger<Controllers.DisplayController> logger, IConfiguration configuration)
         {
             azureServiceTokenProvider = new AzureServiceTokenProvider();
             keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
             keys = new Dictionary<string, Keys>();
 
-            KeyVaultUrl = configuration.GetSection("AzureWebUrl").Value;
+            KeyVaultUrl = configuration.GetSection("VaultUri").Value;
+
+            logger.LogInformation("KeyVaultUrl = " + KeyVaultUrl);
+
         }
 
         public async Task SetSecretAsync(string keyName, string keyValue)

@@ -8,7 +8,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using WebAPI.Controllers;
 using WebAPI.Helpers;
-using WebAPI.Models;
 
 namespace WebAPI.Services
 {
@@ -21,7 +20,7 @@ namespace WebAPI.Services
         public JSonService(ILogger<DisplayController> logger, IConfiguration configuration)
         {
             httpClient = new HttpClient();
-            keyVault = new KeyVault(configuration);
+            keyVault = new KeyVault(logger, configuration);
 
             httpClient.Timeout = new TimeSpan(0, 0, 10);
             this.logger = logger;
@@ -49,7 +48,9 @@ namespace WebAPI.Services
             logger.LogInformation("Refreshing token for: " + token.Prefix);
 
             httpClient.DefaultRequestHeaders.Clear();
-            httpClient.DefaultRequestHeaders.Add("cache-control", "no-cache");
+            //httpClient.DefaultRequestHeaders.Add("Content-Type", "application/x-www-url-form-urlencoded");
+            //httpClient.DefaultRequestHeaders.Add("cache-control", "no-cache");
+            //httpClient.DefaultRequestHeaders.Add("Origin", "http://localhost/");    // url should be the same as used in the GetToken project
 
             if (!string.IsNullOrEmpty(token.Basic))
             {
@@ -59,16 +60,17 @@ namespace WebAPI.Services
             var content = new Dictionary<string, string>
             {
                 { "grant_type", "refresh_token" },
+                { "redirect_uri", "http://localhost" },
                 { "refresh_token", token.Refresh }
             };
 
             if (!string.IsNullOrEmpty(token.ClientID))
             {
-                content.Add("client_id", token.ClientID);
+               content.Add("client_id", token.ClientID);
             }
             if (!string.IsNullOrEmpty(token.ClientSecret))
             {
-                content.Add("client_secret", token.ClientSecret);
+              content.Add("client_secret", token.ClientSecret);
             }
 
             var encoded = new FormUrlEncodedContent(content);
@@ -88,7 +90,8 @@ namespace WebAPI.Services
             }
             else
             {
-                logger.LogError("Error refreshing tokens: " + httpResponse.StatusCode);
+                string message = $"Error refreshing tokens: http {httpResponse.StatusCode} {httpResponse.Content.ReadAsStringAsync().Result}";
+                logger.LogError(message);
             }
             return httpResponse.StatusCode == System.Net.HttpStatusCode.OK;
         }

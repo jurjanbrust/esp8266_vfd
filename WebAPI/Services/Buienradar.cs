@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebAPI.Controllers;
 using WebAPI.Models;
+using WebAPI.Helpers;
 
 namespace WebAPI.Services
 {
@@ -28,7 +29,7 @@ namespace WebAPI.Services
             {
                 Date = DateTime.Now,
                 Line1 = station.temperature + "'C " + station.weatherdescription,
-                Line2 = shortterm.forecast.Replace("&nbsp;", "").Replace("\n\n", " "),
+                Line2 = Textual.RemoveDiacritics(shortterm.forecast.Replace("&nbsp;", "").Replace("\n\n", " ")),
                 DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
                 Delay = 6000
             });
