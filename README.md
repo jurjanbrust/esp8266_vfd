@@ -16,6 +16,10 @@ Find out more about this project on https://jurjan.info
 ### Details
 
 The scheme displayed below shows the components involved.
+
+
+![vfd](/Assets/Scheme.png)
+
 First there is an ESP8266 that is being used as the controller of the VFD. Because the serial port of the VFD is inverted an invertor is needed to invert the bits transmitted on the serial port. I used a sn74hc04n for this, but this is probably a bit of overkill and a transistor should also do, like the picture below.
 
 ![](/Assets/2022-04-25-15-51-49.png)
@@ -23,9 +27,6 @@ First there is an ESP8266 that is being used as the controller of the VFD. Becau
 For the software part I decided to keep the software on the ESP as simple as possible. So the ESP only has logic to control the display, display the time and do some fancy animation tricks.
 
 The Web-API contains all the logic to gather and prepare the information that needs to be displayed on the VFD.
-The scheme below is an overview of the complete solution:
-
-![vfd](/Assets/Scheme.png)
 
 Currently the WEB-API gathers the following kinds of information: 
 * weather forecast
