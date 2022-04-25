@@ -16,7 +16,6 @@ namespace WebAPI.Helpers
         public string Basic { get; set; }
         public string UserId { get; internal set; }
         public string Prefix { get; internal set; }
-        public string TenantID { get; internal set; }
         public string RefreshUrl { get; internal set; }
         public string ClientID { get; internal set; }
         public string ClientSecret { get; internal set; }
@@ -35,11 +34,8 @@ namespace WebAPI.Helpers
             azureServiceTokenProvider = new AzureServiceTokenProvider();
             keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
             keys = new Dictionary<string, Keys>();
-
             KeyVaultUrl = configuration.GetSection("VaultUri").Value;
-
             logger.LogInformation("KeyVaultUrl = " + KeyVaultUrl);
-
         }
 
         public async Task SetSecretAsync(string keyName, string keyValue)
@@ -64,11 +60,10 @@ namespace WebAPI.Helpers
         {
             keys.ToList().ForEach(async i =>
             {
-                if(!string.IsNullOrEmpty(i.Value.Refresh)) await SetSecretAsync(i.Key + "Refresh", i.Value.Refresh);
+                if (!string.IsNullOrEmpty(i.Value.Refresh)) await SetSecretAsync(i.Key + "Refresh", i.Value.Refresh);
                 if (!string.IsNullOrEmpty(i.Value.Access)) await SetSecretAsync(i.Key + "Access", i.Value.Access);
                 if (!string.IsNullOrEmpty(i.Value.Basic)) await SetSecretAsync(i.Key + "Basic", i.Value.Basic);
                 if (!string.IsNullOrEmpty(i.Value.UserId)) await SetSecretAsync(i.Key + "UserId", i.Value.UserId);
-                if (!string.IsNullOrEmpty(i.Value.TenantID)) await SetSecretAsync(i.Key + "TenantID", i.Value.TenantID);
                 if (!string.IsNullOrEmpty(i.Value.ClientID)) await SetSecretAsync(i.Key + "ClientID", i.Value.ClientID);
                 if (!string.IsNullOrEmpty(i.Value.ClientSecret)) await SetSecretAsync(i.Key + "ClientSecret", i.Value.ClientSecret);
                 if (!string.IsNullOrEmpty(i.Value.Prefix)) await SetSecretAsync(i.Key + "Prefix", i.Value.Prefix);
@@ -83,7 +78,6 @@ namespace WebAPI.Helpers
                 item.Value.Access = await GetSecret(item.Key + "Access");
                 item.Value.Basic = await GetSecret(item.Key + "Basic");
                 item.Value.UserId = await GetSecret(item.Key + "UserId");
-                item.Value.TenantID = await GetSecret(item.Key + "TenantID");
                 item.Value.ClientID = await GetSecret(item.Key + "ClientID");
                 item.Value.ClientSecret = await GetSecret(item.Key + "ClientSecret");
                 item.Value.Prefix = await GetSecret(item.Key + "Prefix");

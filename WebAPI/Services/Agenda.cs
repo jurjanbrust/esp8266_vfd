@@ -34,15 +34,14 @@ namespace WebAPI.Services
 
             token = new Keys
             {
+                ClientID = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
+                ClientSecret = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
                 Access = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
                 Refresh = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
+                RefreshUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token",
                 Basic = "",
-                TenantID = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
                 UserId = "",
                 Prefix = "",
-                RefreshUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-                ClientID = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
-                ClientSecret = "put your token here for first authorization and uncomment keyVault.StoreSecrets()"
             };
             keyVault.keys.Add("Graph", token);
 
@@ -106,11 +105,11 @@ namespace WebAPI.Services
                 logger.LogError("Agenda: " + e.Message + e.StackTrace);
             }
 
-            if(displayItems.Count == 0)
+            if (displayItems.Count == 0)
             {
 
-                displayItems.Add(new DisplayItem { Date = DateTime.Now, Line1 = "Geen komende agenda", Line2 = "afspraken.", DisplayMode = DisplayItem.DisplayModeEnum.Normal, Delay=2000 });
-            } 
+                displayItems.Add(new DisplayItem { Date = DateTime.Now, Line1 = "Geen komende agenda", Line2 = "afspraken.", DisplayMode = DisplayItem.DisplayModeEnum.Normal, Delay = 2000 });
+            }
 
             return displayItems.OrderBy(x => x.Date).Take(MAX_ITEMS_TO_RETURN).ToList();
         }
