@@ -99,7 +99,7 @@ A screenshot of my resourcegroup
 # Keyvault
 The keyvault should contain the following secrets for the Graph integration to work
 
-![](2022-04-25-16-05-57.png)
+![](/Assets/2022-04-25-16-05-57.png)
 
 Since the WebAPI needs to access these secrets, the WebAPI should be added to the 'Access Policies' of the keyvault. The WebAPI will have a system assigned managed identity (if not enable it in the Identity settings 
 for the App service of your WebAPI)
