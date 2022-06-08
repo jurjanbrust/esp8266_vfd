@@ -10,7 +10,7 @@ TESTDISPLAY::TESTDISPLAY(VFD& vfd)
 
 void TESTDISPLAY::start()
 {
-    //scrollText();
+    scrollText();
     knightRider();
 }
 
@@ -20,7 +20,7 @@ void TESTDISPLAY::scrollText()
     this->_vfd->enter();
     this->_vfd->typeWriteHorizontal("regel 2 en die is heel erg lang maar daar scrollen we dan horizontaal want dat kan ook natuurlijk gewoon op dat ding, is het niet mooi");
     this->_vfd->fadeOut();
-    delay(1000);
+    delay(5000);
     this->_vfd->clear();
 }
 
@@ -30,6 +30,6 @@ void TESTDISPLAY::knightRider()
     this->_vfd->enter();
     this->_vfd->send("knightrider mode !!");
     this->_vfd->knightRider();
-    delay(1000);
+    delay(5000);
     this->_vfd->home();
 }

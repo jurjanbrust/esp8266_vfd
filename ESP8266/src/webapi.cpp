@@ -61,6 +61,7 @@ void WEBAPI::update() {
     DEBUG_PRINT(_json);
   }
 
+  _doc.clear(); // free up memory; see solution 2: https://arduinojson.org/v6/issues/memory-leak
   DeserializationError err = deserializeJson(_doc,_json);
   if (err) {
     _vfd->clear();

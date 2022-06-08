@@ -13,7 +13,7 @@
 #define vfd_carriageReturn "\x0D"
 #define vfd_cursorOff "\x0E"
 #define vfd_cursorOn "\x0F"
-#define vfd_scrollLineLock const char* "\x10"
+#define vfd_scrollLineLock "\x10"
 #define vfd_setVerticalScrollMode "\x11"
 #define vfd_SetHorizontalScrollMode "\x13"
 #define vfd_softwareReset "\x14"

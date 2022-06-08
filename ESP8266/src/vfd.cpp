@@ -175,7 +175,7 @@ void VFD::knightRider()
       brightness[levelindex] = (uint8_t)level;
       writeAndDelay(brightness, speed);
   }
-  //delay(50);
+  delay(50);
   fadeIn();
 }
 
@@ -213,7 +213,7 @@ void VFD::knightRider2()
       brightness[levelindex] = (uint8_t)level;
       writeAndDelay(brightness, speed);
   }
-  //delay(50);
+  delay(50);
   fadeIn();
 }
 

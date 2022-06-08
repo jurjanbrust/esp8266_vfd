@@ -2,7 +2,7 @@
 
 #include "vfd.h"
 #include <NTPClient.h>
-#include <WiFiManager.h>
+#include <ESPAsyncWiFiManager.h>
 
 class TIMEDISPLAY {
   private:

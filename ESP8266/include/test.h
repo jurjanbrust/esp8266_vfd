@@ -2,7 +2,6 @@
 
 #include "vfd.h"
 #include <Arduino.h>
-#include <WiFiManager.h>
 
 class TESTDISPLAY {
   private:
