@@ -40,33 +40,12 @@ namespace WebAPI.Controllers
             {
                 //_displayItems.AddRange(testdata.Refresh());
                 //_displayItems.AddRange(await fitbit.RefreshAsync());
-                _displayItems.AddRange(await agenda.RefreshAsync());
-                _displayItems.Add(new DisplayItem{DisplayMode = DisplayItem.DisplayModeEnum.KnightRider});
-
-                _displayItems.AddRange(tweakers.Refresh());
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
-
-                _displayItems.AddRange(tech.Refresh());
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
-
-                _displayItems.AddRange(nieuws.Refresh());
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
-
-                _displayItems.AddRange(buienradar.Refresh());
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
-
-                _displayItems.AddRange(flitsers.Refresh());
-                _displayItems.Add(new DisplayItem() { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
-                _displayItems.Add(new DisplayItem() { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
-                _displayItems.Add(new DisplayItem() { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
+                AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.KnightRider);
+                AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
+                AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
+                AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
+                AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
+                AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
             }
             catch (Exception e)
             {
@@ -74,6 +53,17 @@ namespace WebAPI.Controllers
             }
 
             return _displayItems;
+
+            void AddWithEffect(List<DisplayItem> items, DisplayItem.DisplayModeEnum effect)
+            {
+                _displayItems.AddRange(items);
+                if (items.Count > 0)
+                {
+                    _displayItems.Add(new DisplayItem { DisplayMode = effect });
+                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
+                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
+                }
+            }
         }
     }
 }
