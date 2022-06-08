@@ -57,7 +57,7 @@ namespace WebAPI.Services
                     Date = DateTime.Now,
                     Line1 = line1,
                     Line2 = line2,
-                    DisplayMode = DisplayItem.DisplayModeEnum.FadeInOut,
+                    DisplayMode = DisplayItem.DisplayModeEnum.Normal,
                     Delay = 2000
                 };
                 displayItems.Add(item);

@@ -41,11 +41,32 @@ namespace WebAPI.Controllers
                 //_displayItems.AddRange(testdata.Refresh());
                 //_displayItems.AddRange(await fitbit.RefreshAsync());
                 _displayItems.AddRange(await agenda.RefreshAsync());
+                _displayItems.Add(new DisplayItem{DisplayMode = DisplayItem.DisplayModeEnum.KnightRider});
+
                 _displayItems.AddRange(tweakers.Refresh());
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
+
                 _displayItems.AddRange(tech.Refresh());
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
+
                 _displayItems.AddRange(nieuws.Refresh());
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
+
                 _displayItems.AddRange(buienradar.Refresh());
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
+
                 _displayItems.AddRange(flitsers.Refresh());
+                _displayItems.Add(new DisplayItem() { DisplayMode = DisplayItem.DisplayModeEnum.FadeOut });
+                _displayItems.Add(new DisplayItem() { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
+                _displayItems.Add(new DisplayItem() { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
             }
             catch (Exception e)
             {

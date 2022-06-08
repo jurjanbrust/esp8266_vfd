@@ -115,6 +115,46 @@ void VFD::writeAndDelay(uint8_t data[], int ms)
   delay(ms);
 }
 
+void VFD::setBrightness0()
+{
+  writeBytes(brightness0);
+}
+
+void VFD::setBrightness1()
+{
+  writeBytes(brightness1);
+}
+
+void VFD::setBrightness2()
+{
+  writeBytes(brightness2);
+}
+
+void VFD::setBrightness3()
+{
+  writeBytes(brightness3);
+}
+
+void VFD::setBrightness4()
+{
+  writeBytes(brightness4);
+}
+
+void VFD::setBrightness5()
+{
+  writeBytes(brightness5);
+}
+
+void VFD::setBrightness6()
+{
+  writeBytes(brightness6);
+}
+
+void VFD::setBrightness7()
+{
+  writeBytes(brightness7);
+}
+
 void VFD::fadeIn()
 {
   int ms = 100;
@@ -217,7 +257,7 @@ void VFD::knightRider2()
   fadeIn();
 }
 
-void VFD::L2R()
+void VFD::fadeLeftToRight()
 {
   const int positionindex = 2; // index of array that contains the position
   const int levelindex = 3; // index of array that contains the brightness
@@ -241,7 +281,7 @@ void VFD::L2R()
   }
 }
 
-void VFD::R2L()
+void VFD::fadeRightToLeft()
 {
   const int positionindex = 2; // index of array that contains the position
   const int levelindex = 3; // index of array that contains the brightness

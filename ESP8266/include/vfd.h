@@ -68,11 +68,18 @@ public:
   void fadeOut();
   void fadeIn();
   void knightRider();
-  void L2R();
-  void R2L();
+  void fadeLeftToRight();
+  void fadeRightToLeft();
   void knightRider2();
   void knightRider3();
-  
+  void setBrightness0();
+  void setBrightness1();
+  void setBrightness2();
+  void setBrightness3();
+  void setBrightness4();
+  void setBrightness5();
+  void setBrightness6();
+  void setBrightness7();
 private:
   // 0x19 = command operation
   // 0x30 = set level

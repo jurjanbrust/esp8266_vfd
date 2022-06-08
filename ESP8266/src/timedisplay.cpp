@@ -38,6 +38,7 @@ int TIMEDISPLAY::isSummerTime(int day, int month, int dayofweek)
 
 void TIMEDISPLAY::start()
 {
+    this->_vfd->clear();
     for(int i=0; i<200; i++)
     {
         timeClient.update();
@@ -129,6 +130,6 @@ void TIMEDISPLAY::start()
         this->_vfd->linefeed();
         this->_vfd->send("  " + dayStr + " " + monthStr + " " + yearStr);
         this->_vfd->command(vfd_cursorOff);
-        delay(100);
+        delay(100); // update 10 times per second
     }
 }
