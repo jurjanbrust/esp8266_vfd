@@ -59,9 +59,10 @@ namespace WebAPI.Controllers
                 _displayItems.AddRange(items);
                 if (items.Count > 0)
                 {
-                    _displayItems.Add(new DisplayItem { DisplayMode = effect });
-                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen });
-                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0 });
+                    _displayItems.Add(new DisplayItem { DisplayMode = effect, Delay = 10 });
+                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen, Delay = 10 });
+                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0, Delay = 10 });
+                    // added 10 ms delay, so that the VFD can process the commands (not doing this results in # chars on the display)
                 }
             }
         }
