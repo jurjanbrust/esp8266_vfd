@@ -16,7 +16,7 @@
   #endif
 #endif
 
-DynamicJsonDocument _doc(4000);
+DynamicJsonDocument _doc(10000);  // 10 kb max size
 
 WEBAPI::WEBAPI(VFD& vfd) {
 
@@ -62,11 +62,11 @@ void WEBAPI::update() {
       DEBUG_PRINT(_json);
     }
 
-    _doc.clear(); // free up memory; see solution 2: https://arduinojson.org/v6/issues/memory-leak
+    _doc.clear(); // clears the reserved memory; see solution 2: https://arduinojson.org/v6/issues/memory-leak
     DeserializationError err = deserializeJson(_doc,_json);
     if (err) {
       _vfd->clear();
-      _vfd->typeWriteHorizontal("deserializeJson failed");
+      _vfd->typeWriteHorizontal("deserializeJson failed: " + String(err.c_str()));
       delay(5000);
     }
     DEBUG_PRINT("size: " + _doc.size());
@@ -180,9 +180,6 @@ void WEBAPI::start() {
           _vfd->fadeRightToLeft();
         break;
       default:
-          _vfd->clear();
-          _vfd->fixed(line1);
-          _vfd->fixed(line2);
         break;
     }
 

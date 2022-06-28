@@ -53,33 +53,34 @@ namespace WebAPI.Services
         {
             if (input == null)
             {
-                return string.Empty;
+                return "Onbekend";
             }
             string output = input;
             switch (input.Value)
             {
-                case "speedtrap":
+                case "{speedtrap}":
                     output = "Controle";
                     break;
-                case "stationaryvehicle":
+                case "{stationaryvehicle}":
                     output = "Voertuig";
                     break;
-                case "bridge_closed":
+                case "{bridge_closed}":
                     output = "Brug dicht";
                     break;
-                case "accident":
+                case "{accident}":
                     output = "Ongeluk";
                     break;
-                case "trafficjam":
+                case "{trafficjam}":
                     output = "File";
                     break;
-                case "obstruction":
+                case "{obstruction}":
                     output = "Obstructie";
                     break;
-                case "slippery":
+                case "{slippery}":
                     output = "Glad";
                     break;
                 default:
+                    output = "Onbekend";
                     break;
             }
             return output;
