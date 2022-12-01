@@ -23,6 +23,7 @@ class WEBAPI
   private:
     VFD* _vfd;
     TIMEDISPLAY* _time;
+    WiFiClientSecure httpsClient;
     String getResponse();
     String _json;
     String _feed;

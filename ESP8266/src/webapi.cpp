@@ -23,16 +23,13 @@ WEBAPI::WEBAPI(VFD& vfd) {
     this->_vfd = &vfd;
     _host = azureWebAPI;
     _feed = "/display";
+    httpsClient.setInsecure();
+    httpsClient.setTimeout(10000); // 10 Seconds
 }
 
 void WEBAPI::update() {
 
   try {
-    WiFiClientSecure httpsClient;
-    httpsClient.setInsecure();
-    httpsClient.setTimeout(15000); // 15 Seconds
-    delay(1000);
-
     int retry=0;
     while((!httpsClient.connect(_host, 443)) && (retry < 20)){
         delay(100);
@@ -52,12 +49,12 @@ void WEBAPI::update() {
       _json = httpsClient.readStringUntil('\n');
       DEBUG_PRINT(_json);
       if (_json == "\r") {
+        httpsClient.readStringUntil('\n'); // The API sends an extra line with just a number. This breaks the JSON parsing, hence an extra read
         break;
       }
     }
-    
-    httpsClient.readStringUntil('\n'); // The API sends an extra line with just a number. This breaks the JSON parsing, hence an extra read
-    while(httpsClient.connected()){
+
+    while(httpsClient.available()){
       _json = httpsClient.readString();
       DEBUG_PRINT(_json);
     }
@@ -69,7 +66,11 @@ void WEBAPI::update() {
       _vfd->typeWriteHorizontal("deserializeJson failed: " + String(err.c_str()));
       delay(5000);
     }
+    
+    httpsClient.stop();
+
     DEBUG_PRINT("size: " + _doc.size());
+
   } catch (std::exception& e) {
     _vfd->clear();
     _vfd->typeWriteHorizontal("Exception: " + String(e.what()));

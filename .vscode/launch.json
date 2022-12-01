@@ -33,7 +33,7 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": false,
+      "externalConsole": true,
       "cwd": "c:/Dev/KassaDisplay/ESP8266",
       "program": "c:/Dev/KassaDisplay/ESP8266/build/Debug/outDebug",
       "MIMode": "gdb",
