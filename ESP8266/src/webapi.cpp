@@ -16,7 +16,7 @@
   #endif
 #endif
 
-DynamicJsonDocument _doc(10000);  // 10 kb max size
+StaticJsonDocument<5000> _doc;  // 10 kb max size
 
 WEBAPI::WEBAPI(VFD& vfd) {
 
