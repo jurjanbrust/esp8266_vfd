@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.Graph.Core" Version="2.0.8" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.42.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
   </ItemGroup>
 
