@@ -32,6 +32,7 @@ namespace WebAPI.Controllers
             RssFeed tweakers = new RssFeed(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary);
             RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary);
             RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary);
+            M365Status status = new M365Status(_logger, "https://status.office365.com/api/feed/mac", M365Status.Display.Summary);
             Buienradar buienradar = new Buienradar(_logger, _configuration);
             Flitsers flitsers = new Flitsers(_logger, _configuration);
             Agenda agenda = new Agenda(_logger, _configuration);
@@ -40,12 +41,13 @@ namespace WebAPI.Controllers
             {
                 //_displayItems.AddRange(testdata.Refresh());
                 //_displayItems.AddRange(await fitbit.RefreshAsync());
-                AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.KnightRider);
-                AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
-                AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
-                AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
-                AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
-                AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.FadeOut);
+                AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
+                AddWithEffect(status.Refresh(), DisplayItem.DisplayModeEnum.Scroll);
+                AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+                AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+                AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+                AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+                AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
             }
             catch (Exception e)
             {
@@ -61,7 +63,7 @@ namespace WebAPI.Controllers
                 {
                     _displayItems.Add(new DisplayItem { DisplayMode = effect, Delay = 10 });
                     _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen, Delay = 10 });
-                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness0, Delay = 10 });
+                    _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness5, Delay = 10 });
                     // added 10 ms delay, so that the VFD can process the commands (not doing this results in # chars on the display)
                 }
             }

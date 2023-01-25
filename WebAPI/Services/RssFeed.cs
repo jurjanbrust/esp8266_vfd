@@ -14,7 +14,7 @@ namespace WebAPI.Services
     public class RssFeed {
 
         protected ILogger<DisplayController> logger;
-        private readonly string url;
+        protected readonly string url;
         private Display option;
 
         public enum Display
@@ -30,16 +30,23 @@ namespace WebAPI.Services
             this.option = option;
         }
 
-        public List<DisplayItem> Refresh()
+        public virtual List<DisplayItem> Refresh()
         {
-            logger.LogInformation("Refreshing tech");
+            logger.LogInformation("Refreshing rss");
 
             List<DisplayItem> displayItems = new List<DisplayItem>();
 
             using var reader = XmlReader.Create(url);
             var feed = SyndicationFeed.Load(reader);
             var post = feed.Items.FirstOrDefault();
+            AddToDisplay(displayItems, post);
             reader.Close();
+
+            return displayItems;
+        }
+
+        public void AddToDisplay(List<DisplayItem> displayItems, SyndicationItem post)
+        {
             string text = string.Empty;
 
             switch (option)
@@ -64,8 +71,6 @@ namespace WebAPI.Services
                 DisplayMode = DisplayItem.DisplayModeEnum.VerticalScroll,
                 Delay = 2000
             });
-
-            return displayItems;
         }
     }
 }
