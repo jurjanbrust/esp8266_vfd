@@ -24,13 +24,13 @@ jobs:
 
       - name: Build with dotnet
         run: |
-        cd /WebAPI
-        run: dotnet build --configuration Release
+          cd WebAPI
+          run: dotnet build --configuration Release
 
       - name: dotnet publish
         run: |
-        cd /WebAPI
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+          cd WebAPI
+          run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
