@@ -25,7 +25,8 @@ jobs:
       - name: Build with dotnet
         run: |
           cd WebAPI
-          dotnet build --configuration Release
+          dotnet restore
+          dotnet build VFD.WebAPI.csproj --configuration Release
 
       - name: dotnet publish
         run: |
