@@ -5,10 +5,13 @@
 #include "timedisplay.h"
 #include "webapi.h"
 
+#define invertSerial false  // inverts the serial logic of the uart (set to false if using a hardware solution)
+
 VFD vfd;
 TESTDISPLAY test(vfd);
 TIMEDISPLAY tijd(vfd);
 WEBAPI api(vfd);
+
 
 //#define TEST
 void loop() {
@@ -34,7 +37,7 @@ void configModeCallback (WiFiManager *myWiFiManager) {
 }
 
 void setup() {
-    Serial.begin(19200);
+    Serial.begin(19200, SERIAL_8N1, SERIAL_FULL, 1, invertSerial);
     vfd.clear();
     vfd.command(vfd_cursorOff);
     WiFiManager wifiManager;

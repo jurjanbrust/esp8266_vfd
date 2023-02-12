@@ -22,6 +22,8 @@ The scheme displayed below shows the components involved.
 
 First there is an ESP8266 that is being used as the controller of the VFD. Because the serial port of the VFD is inverted an invertor is needed to invert the bits transmitted on the serial port. I used a sn74hc04n for this, but this is probably a bit of overkill and a transistor should also do, like the picture below.
 
+> Note that I have been informed that this solution can also be achieved using software. To accommodate for this, I have included a boolean flag in the main.cpp file that allows switching between a hardware and software solution.
+
 ![](/Assets/2022-04-25-15-51-49.png)
 
 For the software part I decided to keep the software on the ESP as simple as possible. So the ESP only has logic to control the display, display the time and do some fancy animation tricks.
