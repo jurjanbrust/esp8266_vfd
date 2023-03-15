@@ -45,13 +45,9 @@ namespace WebAPI.Services
 
         public async Task<bool> RefreshTokens(Keys token)
         {
-            logger.LogInformation("Refreshing token for: " + token.Prefix);
+            logger.LogInformation($"Refreshing token for: {token.Prefix}");
 
             httpClient.DefaultRequestHeaders.Clear();
-            //httpClient.DefaultRequestHeaders.Add("Content-Type", "application/x-www-url-form-urlencoded");
-            //httpClient.DefaultRequestHeaders.Add("cache-control", "no-cache");
-            //httpClient.DefaultRequestHeaders.Add("Origin", "http://localhost/");    // url should be the same as used in the GetToken project
-
             if (!string.IsNullOrEmpty(token.Basic))
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", token.Basic);
@@ -80,12 +76,10 @@ namespace WebAPI.Services
             if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 string responseAsString = await httpResponse.Content.ReadAsStringAsync();
-                Rootobject_RefreshToken jsonResponse = new Rootobject_RefreshToken();
+                Rootobject_RefreshToken jsonResponse = new();
                 JsonConvert.PopulateObject(responseAsString, jsonResponse);
                 token.Access = jsonResponse.access_token;
                 token.Refresh = jsonResponse.refresh_token;
-                logger.LogInformation("access_token" + token.Access);
-                logger.LogInformation("refresh_token" + token.Refresh);
                 keyVault.StoreSecrets();
             }
             else

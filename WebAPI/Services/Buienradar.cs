@@ -19,7 +19,7 @@ namespace WebAPI.Services
         {
             logger.LogInformation("Refreshing buienradar");
 
-            List<DisplayItem> displayItems = new List<DisplayItem>();
+            List<DisplayItem> displayItems = new();
             Rootobject json = GetJson<Rootobject>("https://data.buienradar.nl/2.0/feed/json");
             var station = json.actual.stationmeasurements.First(s => s.stationid == 6279);
             var shortterm = json.forecast.shortterm;

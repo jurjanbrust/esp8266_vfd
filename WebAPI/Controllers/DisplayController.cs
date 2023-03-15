@@ -29,30 +29,25 @@ namespace WebAPI.Controllers
         {
             //TestData testdata = new TestData();
             //Fitbit fitbit = new Fitbit(_logger, _configuration);
-            RssFeed tweakers = new RssFeed(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary);
-            RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary);
-            RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary);
+            RssFeed tweakers = new RssFeed(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary, "Tweakers");
+            RssFeed tech = new RssFeed(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary, "Tech");
+            RssFeed nieuws = new RssFeed(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary, "Nieuws");
+            RssFeed azure = new RssFeed(_logger, "https://azurecomcdn.azureedge.net/nl-nl/blog/feed/", RssFeed.Display.Summary, "Azure");
             M365Status status = new M365Status(_logger, "https://status.office365.com/api/feed/mac", M365Status.Display.Summary);
             Buienradar buienradar = new Buienradar(_logger, _configuration);
             Flitsers flitsers = new Flitsers(_logger, _configuration);
             Agenda agenda = new Agenda(_logger, _configuration);
-            
-            try
-            {
-                //_displayItems.AddRange(testdata.Refresh());
-                //_displayItems.AddRange(await fitbit.RefreshAsync());
-                AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
-                AddWithEffect(status.Refresh(), DisplayItem.DisplayModeEnum.Scroll);
-                AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message + e.StackTrace);
-            }
+
+            //_displayItems.AddRange(testdata.Refresh());
+            //_displayItems.AddRange(await fitbit.RefreshAsync());
+            AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
+            AddWithEffect(status.Refresh(), DisplayItem.DisplayModeEnum.Scroll);
+            AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            AddWithEffect(azure.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
 
             return _displayItems;
 

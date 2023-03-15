@@ -8,23 +8,26 @@ namespace WebAPI.Services
     {
         public List<DisplayItem> Refresh()
         {
-            List<DisplayItem> displayItems = new List<DisplayItem>();
-
-            displayItems.Add(new DisplayItem
+            List<DisplayItem> displayItems = new()
             {
-                Date = DateTime.Now,
-                Line1 = "Horizontal scroll",
-                Line2 = "Hallo wereld 1234 met een zeer lange tekst",
-                DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
-                Delay = 1000
-            });
+                new DisplayItem
+                {
+                    Date = DateTime.Now,
+                    Line1 = "Horizontal scroll",
+                    Line2 = "Hallo wereld 1234 met een zeer lange tekst",
+                    DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
+                    Delay = 1000
+                },
 
-            displayItems.Add(new DisplayItem {
-                                Date = DateTime.Now,
-                                Line1 = "Vertical scroll",
-                                Line2 = "Hallo wereld 1234 met een zeer lange tekst",
-                                DisplayMode = DisplayItem.DisplayModeEnum.VerticalScroll,
-                                Delay = 1000} );
+                new DisplayItem
+                {
+                    Date = DateTime.Now,
+                    Line1 = "Vertical scroll",
+                    Line2 = "Hallo wereld 1234 met een zeer lange tekst",
+                    DisplayMode = DisplayItem.DisplayModeEnum.VerticalScroll,
+                    Delay = 1000
+                }
+            };
 
             return displayItems;
         }

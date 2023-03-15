@@ -11,11 +11,14 @@ using Microsoft.Extensions.Logging;
 
 namespace WebAPI.Services
 {
-    public class RssFeed {
+    public class RssFeed
+    {
 
         protected ILogger<DisplayController> logger;
         protected readonly string url;
-        private Display option;
+        private readonly Display option;
+
+        public string Source { get; }
 
         public enum Display
         {
@@ -23,39 +26,53 @@ namespace WebAPI.Services
             Summary
         }
 
-        public RssFeed(ILogger<DisplayController> logger, string url, Display option)
+        public RssFeed(ILogger<DisplayController> logger, string url, Display option, string source = null)
         {
             this.logger = logger;
             this.url = url;
             this.option = option;
+            Source = source;
         }
 
         public virtual List<DisplayItem> Refresh()
         {
-            logger.LogInformation("Refreshing rss");
-
-            List<DisplayItem> displayItems = new List<DisplayItem>();
-
-            using var reader = XmlReader.Create(url);
-            var feed = SyndicationFeed.Load(reader);
-            var post = feed.Items.FirstOrDefault();
-            AddToDisplay(displayItems, post);
-            reader.Close();
+            List<DisplayItem> displayItems = new();
+            try
+            {
+                logger.LogInformation("Refreshing rss");
+                using var reader = XmlReader.Create(url);
+                var feed = SyndicationFeed.Load(reader);
+                var post = feed.Items.FirstOrDefault();
+                AddToDisplay(displayItems, post);
+                reader.Close();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message + e.StackTrace);
+            }
 
             return displayItems;
         }
 
         public void AddToDisplay(List<DisplayItem> displayItems, SyndicationItem post)
         {
-            string text = string.Empty;
+            string text = Source == null ? string.Empty : $"{Source}: ";
 
             switch (option)
             {
                 case Display.Title:
-                    text = post.Title.Text;
+                    text += post.Title.Text;
                     break;
                 case Display.Summary:
-                    text = post.Summary.Text;
+                    // fix to use text if summary only contains strings or is empty
+                    if (post.Summary.Text.Trim().Length == 0)
+                    {
+                        text += post.Title.Text;
+                    }
+                    else
+                    {
+                        text += post.Summary.Text;
+                    }
                     break;
             }
             text = Regex.Replace(text, @"<[^>]*>", String.Empty);

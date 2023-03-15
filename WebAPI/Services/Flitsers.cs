@@ -18,7 +18,7 @@ namespace WebAPI.Services
         {
             logger.LogInformation("Refreshing flitsers");
 
-            List<DisplayItem> displayItems = new List<DisplayItem>();
+            List<DisplayItem> displayItems = new();
             dynamic stuff = GetJson("https://tesla.flitsmeister.nl/teslaFeed.json");
             int i = 0;
             foreach (var item in stuff.features)
@@ -42,20 +42,20 @@ namespace WebAPI.Services
                 }
                 catch (Exception e)
                 {
-                    logger.LogError("Flitsers: " + e.Message + e.StackTrace);
+                    logger.LogError($"Flitsers: {e.Message} {e.StackTrace}");
                 }
 
             }
             return displayItems;
         }
 
-        private string Translate(dynamic input)
+        private static string Translate(dynamic input)
         {
             if (input == null)
             {
                 return "Onbekend";
             }
-            string output = input;
+            string output;
             switch (input.Value)
             {
                 case "speedtrap":

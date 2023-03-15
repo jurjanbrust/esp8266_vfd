@@ -25,7 +25,7 @@ namespace WebAPI.Services
 
         private static List<Rootobject_Calendar> calendarItems;
         private static List<string> queries;
-        private readonly CultureInfo culture = new CultureInfo("nl-NL");
+        private readonly CultureInfo culture = new("nl-NL");
 
         public Agenda(ILogger<DisplayController> logger, IConfiguration configuration) : base(logger, configuration)
         {
@@ -73,7 +73,7 @@ namespace WebAPI.Services
         {
             await keyVault.GetSecrets();
 
-            List<DisplayItem> displayItems = new List<DisplayItem>();
+            List<DisplayItem> displayItems = new();
             try
             {
                 calendarItems.Clear();
@@ -118,7 +118,7 @@ namespace WebAPI.Services
         {
             string firstLine;
             string secondLine;
-            List<DisplayItem> displayItems = new List<DisplayItem>();
+            List<DisplayItem> displayItems = new();
 
             if (calendarItem == null) return null;
 
