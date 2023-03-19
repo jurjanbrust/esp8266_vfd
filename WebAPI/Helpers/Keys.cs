@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
 
 namespace WebAPI.Helpers
 {
@@ -24,31 +24,30 @@ namespace WebAPI.Helpers
     public class KeyVault
     {
         public Dictionary<string, Keys> keys;
-        protected AzureServiceTokenProvider azureServiceTokenProvider;
-        protected KeyVaultClient keyVaultClient;
+        public SecretClient keyVaultClient;
         protected IConfiguration Configuration { get; set; }
         private readonly string KeyVaultUrl;
 
-        public KeyVault(Microsoft.Extensions.Logging.ILogger<Controllers.DisplayController> logger, IConfiguration configuration)
+        public KeyVault(ILogger<Controllers.DisplayController> logger, IConfiguration configuration)
         {
-            azureServiceTokenProvider = new AzureServiceTokenProvider();
-            keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-            keys = new Dictionary<string, Keys>();
             KeyVaultUrl = configuration.GetSection("VaultUri").Value;
+            keyVaultClient = new SecretClient(new Uri(KeyVaultUrl), new DefaultAzureCredential());
+            keys = new Dictionary<string, Keys>();
             logger.LogInformation("KeyVaultUrl = " + KeyVaultUrl);
         }
 
-        public async Task SetSecretAsync(string keyName, string keyValue)
+        public void SetSecret(string keyName, string keyValue)
         {
-            await keyVaultClient.SetSecretAsync(KeyVaultUrl, keyName, keyValue);
+            var secret = new KeyVaultSecret(keyName, keyValue);
+            keyVaultClient.SetSecret(secret);
         }
 
         public async Task<string> GetSecret(string keyName)
         {
             try
             {
-                var secret = await keyVaultClient.GetSecretAsync($"{KeyVaultUrl}/secrets/" + keyName).ConfigureAwait(false);
-                return secret.Value;
+                var secret = await keyVaultClient.GetSecretAsync(keyName).ConfigureAwait(false);
+                return secret.Value.Value;
             }
             catch (Exception)
             {
@@ -58,15 +57,15 @@ namespace WebAPI.Helpers
 
         public void StoreSecrets()
         {
-            keys.ToList().ForEach(async i =>
+            keys.ToList().ForEach(i =>
             {
-                if (!string.IsNullOrEmpty(i.Value.Refresh)) await SetSecretAsync(i.Key + "Refresh", i.Value.Refresh);
-                if (!string.IsNullOrEmpty(i.Value.Access)) await SetSecretAsync(i.Key + "Access", i.Value.Access);
-                if (!string.IsNullOrEmpty(i.Value.Basic)) await SetSecretAsync(i.Key + "Basic", i.Value.Basic);
-                if (!string.IsNullOrEmpty(i.Value.UserId)) await SetSecretAsync(i.Key + "UserId", i.Value.UserId);
-                if (!string.IsNullOrEmpty(i.Value.ClientID)) await SetSecretAsync(i.Key + "ClientID", i.Value.ClientID);
-                if (!string.IsNullOrEmpty(i.Value.ClientSecret)) await SetSecretAsync(i.Key + "ClientSecret", i.Value.ClientSecret);
-                if (!string.IsNullOrEmpty(i.Value.Prefix)) await SetSecretAsync(i.Key + "Prefix", i.Value.Prefix);
+                if (!string.IsNullOrEmpty(i.Value.Refresh)) SetSecret(i.Key + "Refresh", i.Value.Refresh);
+                if (!string.IsNullOrEmpty(i.Value.Access)) SetSecret(i.Key + "Access", i.Value.Access);
+                if (!string.IsNullOrEmpty(i.Value.Basic)) SetSecret(i.Key + "Basic", i.Value.Basic);
+                if (!string.IsNullOrEmpty(i.Value.UserId)) SetSecret(i.Key + "UserId", i.Value.UserId);
+                if (!string.IsNullOrEmpty(i.Value.ClientID)) SetSecret(i.Key + "ClientID", i.Value.ClientID);
+                if (!string.IsNullOrEmpty(i.Value.ClientSecret)) SetSecret(i.Key + "ClientSecret", i.Value.ClientSecret);
+                if (!string.IsNullOrEmpty(i.Value.Prefix)) SetSecret(i.Key + "Prefix", i.Value.Prefix);
             });
         }
 
