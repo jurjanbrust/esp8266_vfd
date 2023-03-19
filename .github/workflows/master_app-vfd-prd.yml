@@ -25,11 +25,7 @@ jobs:
         run: |
           cd WebAPI
           dotnet build WebAPI.sln --configuration Release
-
-      - name: dotnet publish
-        run: |
-          cd WebAPI
-          dotnet publish WebAPI.sln -c Release -o ${{env.DOTNET_ROOT}}\\vfdwebapi
+          dotnet publish VFD.WebAPI.csproj -c Release -o ${{env.DOTNET_ROOT}}\\vfdwebapi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
