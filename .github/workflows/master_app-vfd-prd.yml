@@ -29,13 +29,13 @@ jobs:
       - name: dotnet publish
         run: |
           cd WebAPI
-          dotnet publish WebAPI.sln -c Release -o ${{env.DOTNET_ROOT}}\vfdwebapi
+          dotnet publish WebAPI.sln -c Release -o ${{env.DOTNET_ROOT}}\\vfdwebapi
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}\vfdwebapi
+          path: ${{env.DOTNET_ROOT}}\\vfdwebapi
 
   deploy:
     runs-on: windows-latest
