@@ -21,7 +21,7 @@ jobs:
         with:
           dotnet-version: '6.0'
 
-      - name: Build with dotnet
+      - name: Build and Publish
         run: |
           cd WebAPI
           dotnet build VFD.WebAPI.csproj --configuration Release
