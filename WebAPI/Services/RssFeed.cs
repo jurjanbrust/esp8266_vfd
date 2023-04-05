@@ -76,6 +76,9 @@ namespace WebAPI.Services
                     break;
             }
             text = Regex.Replace(text, @"<[^>]*>", String.Empty);
+            text = text.Replace("&amp;", "&");
+            text = text.Replace("\n", "");
+            text = text.Replace("’", "'");
 
             // remove accents from string: é, û.... and so on
             text = Textual.RemoveDiacritics(text);
