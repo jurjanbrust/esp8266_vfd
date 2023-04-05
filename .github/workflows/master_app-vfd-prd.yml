@@ -1,13 +1,20 @@
+# https://github.com/Azure/actions-workflow-samples/blob/master/AppService/asp.net-core-webapp-on-azure.yml
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - app-vfd-prd
+name: Build and deploy WebAPI
 
 on:
   push:
     branches:
       - master
   workflow_dispatch:
+
+
+env:
+  AZURE_WEBAPP_NAME: VFDWebAPI        # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '6.0'               # set this to the dot net version to use
 
 jobs:
   build:
@@ -16,16 +23,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v3
+      # Setup .NET Core SDK
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0'
+          dotnet-version: ${{ env.DOTNET_VERSION }} 
 
-      - name: Build with dotnet
+      - name: Build and Publish
         run: |
           cd WebAPI
-          dotnet build WebAPI.sln --configuration Release
-          dotnet publish VFD.WebAPI.csproj -c Release -o ${{env.DOTNET_ROOT}}\\vfdwebapi
+          dotnet build --configuration Release
+          dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -48,9 +56,9 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'app-vfd-prd'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B8F047D6DE1A416BA011D504E2C62F2C }}
-          package: .
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
