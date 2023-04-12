@@ -21,7 +21,7 @@ void loop() {
     #endif
 
     #ifndef TEST
-    for(int i=0; i<=5; i++) {      // update API every n itterations
+    for(int i=0; i<=2; i++) {      // update API every n itterations
         if(i==0) {
             api.update();
         }
