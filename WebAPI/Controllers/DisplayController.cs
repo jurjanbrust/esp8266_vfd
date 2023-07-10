@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
     public class DisplayController : ControllerBase
     {
         public static int group = 1;    // static so that it does not reset to zero on a new http call
-        private const int numberOfGroups = 5;
+        private const int numberOfGroups = 2;
         private readonly ILogger<DisplayController> _logger;
         private List<DisplayItem> _displayItems;
         public IConfiguration _configuration;
@@ -35,16 +35,14 @@ namespace WebAPI.Controllers
             RssFeed tweakers = new(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary, "Tweakers");
             RssFeed tech = new(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary, "Nu.nl Tech");
             RssFeed nieuws = new(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary, "Nu.nl Nieuws");
-
-            RssFeed techCrunchAI = new(_logger, "https://techcrunch.com/category/artificial-intelligence/feed/", RssFeed.Display.Title, "TechCrunch AI");
-            RssFeed techCrunchMedia = new(_logger, "https://techcrunch.com/category/media-entertainmen/feed/", RssFeed.Display.Title, "TechCrunch Media");
             RssFeed engadget = new(_logger, "https://www.engadget.com/rss.xml", RssFeed.Display.Title, "Engadget");
 
-            RssFeed azure = new(_logger, "https://azurecomcdn.azureedge.net/nl-nl/blog/feed/", RssFeed.Display.Summary, "Azure");
-            
-            RssFeed cnnTop = new(_logger, "http://rss.cnn.com/rss/edition.rss", RssFeed.Display.Title, "CNN Top");
-            RssFeed cnnWorld = new(_logger, "http://rss.cnn.com/rss/edition_world.rss", RssFeed.Display.Title, "CNN World");
-            RssFeed cnnEurope = new(_logger, "http://rss.cnn.com/rss/edition_europe.rss", RssFeed.Display.Title, "CNN Europe");
+            //RssFeed techCrunchAI = new(_logger, "https://techcrunch.com/category/artificial-intelligence/feed/", RssFeed.Display.Title, "TechCrunch AI");
+            //RssFeed techCrunchMedia = new(_logger, "https://techcrunch.com/category/media-entertainmen/feed/", RssFeed.Display.Title, "TechCrunch Media");
+            //RssFeed azure = new(_logger, "https://azurecomcdn.azureedge.net/nl-nl/blog/feed/", RssFeed.Display.Summary, "Azure");
+            //RssFeed cnnTop = new(_logger, "http://rss.cnn.com/rss/edition.rss", RssFeed.Display.Title, "CNN Top");
+            //RssFeed cnnWorld = new(_logger, "http://rss.cnn.com/rss/edition_world.rss", RssFeed.Display.Title, "CNN World");
+            //RssFeed cnnEurope = new(_logger, "http://rss.cnn.com/rss/edition_europe.rss", RssFeed.Display.Title, "CNN Europe");
 
             M365Status status = new(_logger, "https://status.office365.com/api/feed/mac", M365Status.Display.Summary);
             Buienradar buienradar = new(_logger, _configuration);
@@ -55,6 +53,7 @@ namespace WebAPI.Controllers
             //_displayItems.AddRange(await fitbit.RefreshAsync());
             AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
             AddWithEffect(status.Refresh(), DisplayItem.DisplayModeEnum.Scroll);
+            AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
 
             // Only return items of the group so that the esp does not run out of memory (it will if it has to process too much data)
             switch (group)
@@ -62,23 +61,10 @@ namespace WebAPI.Controllers
                 case 1:
                     AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
                     AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
                     break;
                 case 2:
-                    AddWithEffect(techCrunchAI.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    AddWithEffect(techCrunchMedia.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    break;
-                case 3:
-                    AddWithEffect(cnnEurope.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    AddWithEffect(cnnWorld.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    AddWithEffect(cnnTop.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    break;
-                case 4:
+                    AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
                     AddWithEffect(engadget.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    break;
-                case 5:
-                    AddWithEffect(azure.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
                     break;
                 default:
                     break;
