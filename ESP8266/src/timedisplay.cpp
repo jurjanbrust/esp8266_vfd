@@ -4,6 +4,7 @@
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "nl.pool.ntp.org", 3600*2, 600000);
 String space = " ";
+const String monthNames[] = {"Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"};
 
 TIMEDISPLAY::TIMEDISPLAY(VFD& vfd)
 {
@@ -13,27 +14,21 @@ TIMEDISPLAY::TIMEDISPLAY(VFD& vfd)
     this->_vfd->command(vfd_cursorOff);
 }
 
-int TIMEDISPLAY::isSummerTime(int day, int month, int dayofweek)
+int TIMEDISPLAY::isSummerTime(int day, int month, int dayOfWeek)
 {
-  if ((month >=4) &&( month <= 9)) 
-    return 2;  // april-september is altijd zomertijd
-  if ((month <=2) || (month >= 10))
-    return 1; // jan-feb, nov-dec altijd winter
-    
-    // day minus dayofweek is datum van vorige zondag.
-    // Dat is de laatste v/d maand als dat >= 25
-    // (day-dayofweek is negatief als vorige zondag in vorige maand viel.
-  if ((day-dayofweek) >= 25) {
-    if (month == 3)
-      return 2;  // Maart, zomertijd is ingegeaan
-    else
-      return 1;  // October, zomertijd is voorbij
-  } else {
-    if (month == 3)
-      return 1;  // Maart, zomertijd is nog niet ingegeaan
-    else
-      return 2;  // October, zomertijd is nog niet voorbij
-  }
+    // January to March and October to December are always standard time (winter)
+    if (month < 4 || (month == 10 && dayOfWeek >= 4))
+        return 1; // Standard time
+
+    // April to September are always daylight saving time (summer)
+    if (month > 9 || (month == 9 && dayOfWeek < 4))
+        return 2; // Daylight saving time
+
+    // From the fourth Sunday in March to the last Sunday in October, it's daylight saving time
+    if ((month == 3 && dayOfWeek == 0 && day >= 25) || (month > 3 && month < 10) || (month == 10 && dayOfWeek == 0 && day < 25))
+        return 2; // Daylight saving time
+
+    return 1; // Standard time
 }
 
 void TIMEDISPLAY::start()
@@ -60,45 +55,7 @@ void TIMEDISPLAY::start()
         int multiplier = isSummerTime(ti->tm_mday, month, day);
         timeClient.setTimeOffset(3600*multiplier);
 
-        switch(month) {
-            case 1 :
-                monthStr = "Januari";
-                break;
-            case 2 :
-                monthStr = "Februari";
-                break;
-            case 3 :
-                monthStr = "Maart";
-                break;
-            case 4 :
-                monthStr = "April";
-                break;
-            case 5 :
-                monthStr = "Mei";
-                break;
-            case 6 :
-                monthStr = "Juni";
-                break;
-            case 7 :
-                monthStr = "Juli";
-                break;
-            case 8 :
-                monthStr = "Augustus";
-                break;
-            case 9 :
-                monthStr = "September";
-                break;
-            case 10 :
-                monthStr = "Oktober";
-                break;
-            case 11 :
-                monthStr = "November";
-                break;
-            case 12 :
-                monthStr = "December";
-                break;
-        }
-
+        monthStr = monthNames[month - 1];
         String dayStr = ti->tm_mday < 10 ? "0" + String(ti->tm_mday) : String(ti->tm_mday);
 
         String dayAsText;
