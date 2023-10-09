@@ -29,7 +29,7 @@ namespace WebAPI.Services
             {
                 Date = DateTime.Now,
                 Line1 = station.temperature + "'C " + station.weatherdescription,
-                Line2 = Textual.RemoveDiacritics(shortterm.forecast.Replace("°","'").Replace("&nbsp;", "").Replace("\n\n", " ")),
+                Line2 = Textual.RemoveDiacritics(shortterm.forecast.Trim().Replace("°","'").Replace("&nbsp;", "").Replace("\n\n", " ")),
                 DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
                 Delay = 6000
             });

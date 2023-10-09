@@ -15,7 +15,7 @@ namespace WebAPI.Controllers
     public class DisplayController : ControllerBase
     {
         public static int group = 1;    // static so that it does not reset to zero on a new http call
-        private const int numberOfGroups = 2;
+        private const int numberOfGroups = 1;
         private readonly ILogger<DisplayController> _logger;
         private List<DisplayItem> _displayItems;
         public IConfiguration _configuration;
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
             RssFeed tweakers = new(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary, "Tweakers");
             RssFeed tech = new(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary, "Nu.nl Tech");
             RssFeed nieuws = new(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary, "Nu.nl Nieuws");
-            RssFeed engadget = new(_logger, "https://www.engadget.com/rss.xml", RssFeed.Display.Title, "Engadget");
+            //RssFeed engadget = new(_logger, "https://www.engadget.com/rss.xml", RssFeed.Display.Title, "Engadget");
 
             //RssFeed techCrunchAI = new(_logger, "https://techcrunch.com/category/artificial-intelligence/feed/", RssFeed.Display.Title, "TechCrunch AI");
             //RssFeed techCrunchMedia = new(_logger, "https://techcrunch.com/category/media-entertainmen/feed/", RssFeed.Display.Title, "TechCrunch Media");
@@ -61,10 +61,7 @@ namespace WebAPI.Controllers
                 case 1:
                     AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
                     AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    break;
-                case 2:
                     AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    AddWithEffect(engadget.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
                     break;
                 default:
                     break;

@@ -61,17 +61,17 @@ namespace WebAPI.Services
             switch (option)
             {
                 case Display.Title:
-                    text += post.Title.Text;
+                    text += post.Title.Text.Trim();
                     break;
                 case Display.Summary:
                     // fix to use text if summary only contains strings or is empty
                     if (post.Summary.Text.Trim().Length == 0)
                     {
-                        text += post.Title.Text;
+                        text += post.Title.Text.Trim();
                     }
                     else
                     {
-                        text += post.Summary.Text;
+                        text += post.Summary.Text.Trim();
                     }
                     break;
             }
