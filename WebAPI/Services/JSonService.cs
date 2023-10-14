@@ -13,9 +13,10 @@ namespace WebAPI.Services
 {
     public class JSonService
     {
+        protected Keys token;
         protected HttpClient httpClient;
-        protected ILogger<DisplayController> logger;
         protected KeyVault keyVault;
+        protected ILogger<DisplayController> logger;
 
         public JSonService(ILogger<DisplayController> logger, IConfiguration configuration)
         {
@@ -24,6 +25,20 @@ namespace WebAPI.Services
 
             httpClient.Timeout = new TimeSpan(0, 0, 10);
             this.logger = logger;
+
+            token = new Keys
+            {
+                ClientID = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
+                ClientSecret = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
+                Access = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
+                Refresh = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
+                RefreshUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                Basic = "",
+                UserId = "",
+                Prefix = "",
+            };
+            keyVault.keys.Add("Graph", token);
+            //keyVault.StoreSecrets();  // only use this once to store the token above, tokens will change in the token refresh function
         }
 
         public dynamic GetJson(string url)
@@ -88,6 +103,18 @@ namespace WebAPI.Services
                 logger.LogError(message);
             }
             return httpResponse.StatusCode == System.Net.HttpStatusCode.OK;
+        }
+
+        public async Task<HttpResponseMessage> GetItemsAsync(string query)
+        {
+            httpClient.DefaultRequestHeaders.Clear();
+            httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
+            httpClient.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+            httpClient.DefaultRequestHeaders.Add("Host", "graph.microsoft.com");
+            httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token.Access);
+            HttpResponseMessage httpResponse = await httpClient.GetAsync(query);
+            return httpResponse;
         }
     }
 }

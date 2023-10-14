@@ -15,8 +15,6 @@ namespace WebAPI.Services
 {
     public class Agenda : JSonService
     {
-        private Keys token;
-
         private const int CALENDAR_DAYS_LOOKAHEAD_1 = 2;
         private const int CALENDAR_DAYS_LOOKAHEAD_2 = 2;
         private const int CALENDAR_DAYS_LOOKAHEAD_3 = 3;
@@ -31,21 +29,6 @@ namespace WebAPI.Services
         {
             logger.LogInformation("Refreshing agenda");
             this.logger = logger;
-
-            token = new Keys
-            {
-                ClientID = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
-                ClientSecret = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
-                Access = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
-                Refresh = "put your token here for first authorization and uncomment keyVault.StoreSecrets()",
-                RefreshUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token",
-                Basic = "",
-                UserId = "",
-                Prefix = "",
-            };
-            keyVault.keys.Add("Graph", token);
-
-            //keyVault.StoreSecrets();  // only use this once to store the token above, tokens will change in the token refresh function
 
             calendarItems = new List<Rootobject_Calendar>();
             queries = new List<string>();
@@ -79,17 +62,17 @@ namespace WebAPI.Services
                 calendarItems.Clear();
                 foreach (string query in queries)
                 {
-                    HttpResponseMessage httpResponse = await GetCalendarItemsAsync(query);
+                    HttpResponseMessage httpResponse = await GetItemsAsync(query);
                     if (httpResponse.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                     {
                         await RefreshTokens(token);
-                        httpResponse = await GetCalendarItemsAsync(query);
+                        httpResponse = await GetItemsAsync(query);
                     }
 
                     if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         string responseAsString = await httpResponse.Content.ReadAsStringAsync();
-                        Rootobject_Calendar calendarItem = new Rootobject_Calendar();
+                        Rootobject_Calendar calendarItem = new();
                         JsonConvert.PopulateObject(responseAsString, calendarItem);
                         displayItems.AddRange(CreateDisplayItem(calendarItem));
                     }
@@ -159,18 +142,6 @@ namespace WebAPI.Services
                 });
             }
             return displayItems;
-        }
-
-        public async Task<HttpResponseMessage> GetCalendarItemsAsync(string query)
-        {
-            httpClient.DefaultRequestHeaders.Clear();
-            httpClient.DefaultRequestHeaders.Add("Accept", "*/*");
-            httpClient.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
-            httpClient.DefaultRequestHeaders.Add("Host", "graph.microsoft.com");
-            httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
-            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token.Access);
-            HttpResponseMessage httpResponse = await httpClient.GetAsync(query);
-            return httpResponse;
         }
     }
 }

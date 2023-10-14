@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 public class Rootobject_Calendar
 {
-    public Value[] value { get; set; }
+    public CalendarItem[] value { get; set; }
 }
-public class Value
+public class CalendarItem
 {
     public string Id { get; set; }
     public DateTime CreatedDateTime { get; set; }

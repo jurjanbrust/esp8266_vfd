@@ -16,7 +16,9 @@
       "environmentVariables": {
         "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONENABLED": "true",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONVAULT": "https://vfd-webapi-keyvault.vault.azure.net/"
+        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONVAULT": "https://vfd-webapi-keyvault.vault.azure.net/",
+        "VaultUri": "https://kv-vfd-prod.vault.azure.net/",
+        "AZURE_USERNAME": "jurjanbrust@hotmail.com"
       }
     },
     "WebAPI": {
@@ -26,13 +28,19 @@
       "environmentVariables": {
         "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONENABLED": "true",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONVAULT": "https://vfd-webapi-keyvault.vault.azure.net/"
+        "ASPNETCORE_HOSTINGSTARTUP__KEYVAULT__CONFIGURATIONVAULT": "https://vfd-webapi-keyvault.vault.azure.net/",
+        "VaultUri": "https://kv-vfd-prod.vault.azure.net/",
+        "AZURE_USERNAME": "jurjanbrust@hotmail.com"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",
-      "launchBrowser": true
+      "launchBrowser": true,
+      "environmentVariables": {
+        "VaultUri": "https://kv-vfd-prod.vault.azure.net/",
+        "AZURE_USERNAME": "jurjanbrust@hotmail.com"
+      }
     }
   }
 }
