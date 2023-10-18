@@ -88,13 +88,13 @@ namespace WebAPI.Services
             foreach (var item in todoItems.value)
             {
                 firstLine = $"Todo: {listName}";
-                secondLine = item.title + " " + item.importance; 
+                secondLine = item.title; 
 
                 displayItems.Add(new DisplayItem
                 {
                     Date = DateTime.Now,
-                    Line1 = firstLine,
-                    Line2 = secondLine,
+                    Line1 = Textual.CleanupText(firstLine),
+                    Line2 = Textual.CleanupText(secondLine),
                     DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
                     Delay = 2000
                 });

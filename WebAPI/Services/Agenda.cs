@@ -126,8 +126,8 @@ namespace WebAPI.Services
                     dag = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(time.ToString("dddd", culture));
                 }
 
-                string subject = item.Subject.Trim();
-                subject = Textual.RemoveDiacritics(subject);
+                string subject = item.Subject;
+                subject = Textual.CleanupText(subject);
 
                 firstLine = dag + " " + time.ToString("dd MMMM", culture).ToString().Trim();
                 secondLine = (time.ToString("HH:mm", culture).Replace("00:00", "").Replace("01:00", "").Replace("02:00", "") + " " + subject);

@@ -8,6 +8,8 @@ using System.ServiceModel.Syndication;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
+using WebAPI.Helpers;
 
 namespace WebAPI.Services
 {
@@ -17,6 +19,7 @@ namespace WebAPI.Services
         protected ILogger<DisplayController> logger;
         protected readonly string url;
         private readonly Display option;
+        private const int nrOfItemsToDisplay = 2;
 
         public string Source { get; }
 
@@ -42,8 +45,11 @@ namespace WebAPI.Services
                 logger.LogInformation("Refreshing rss");
                 using var reader = XmlReader.Create(url);
                 var feed = SyndicationFeed.Load(reader);
-                var post = feed.Items.FirstOrDefault();
-                AddToDisplay(displayItems, post);
+                var posts = feed.Items.Take(nrOfItemsToDisplay);
+                foreach (var item in posts)
+                {
+                    AddToDisplay(displayItems, item);
+                }
                 reader.Close();
             }
             catch (Exception e)
@@ -75,14 +81,8 @@ namespace WebAPI.Services
                     }
                     break;
             }
-            text = Regex.Replace(text, @"<[^>]*>", String.Empty);
-            text = text.Replace("&amp;", "&");
-            text = text.Replace("\n", "");
-            text = text.Replace("’", "'");
-
-            // remove accents from string: é, û.... and so on
-            text = Textual.RemoveDiacritics(text);
-
+            text = Textual.CleanupText(text);
+            
             displayItems.Add(new DisplayItem
             {
                 Date = DateTime.Now,
