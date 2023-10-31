@@ -11,6 +11,6 @@ class TIMEDISPLAY {
   public:
     TIMEDISPLAY(VFD& vfd);
     void start();
-    int isSummerTime(int day, int month, int dayofweek);
+    int isSummerTime(int day, int month, int dayofweek, int year);
     String getDayAsText(int day, const String& time);
 };
