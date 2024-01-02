@@ -13,6 +13,7 @@ TaskHandle_t Task1;
 
 void loop() {
     tijd.start();
+    api.update();
     api.start();
 } 
 
@@ -33,8 +34,6 @@ void setup() {
   Serial.println("Starting");
   delay(1000); 
   display.begin();
-  display.fixed("Starting");  
-  delay(1000); 
   display.clear();
   WiFiManager wifiManager;
   wifiManager.setDebugOutput(false);
@@ -54,7 +53,7 @@ void setup() {
       Serial.println("Connected WiFi");
       Serial.println(WiFi.localIP().toString());
   }
-  api.update();
+  // api.update();
   // Initialize your task (2nd loop)
   // xTaskCreatePinnedToCore(apiUpdateLoop, "API", STACK_SIZE, nullptr, tskIDLE_PRIORITY+3 , &Task1, 1);
 }

@@ -50,17 +50,7 @@ namespace WebAPI.Controllers
             //Todo todo = new(_logger, _configuration);
             
             // Only return items of the group so that the esp does not run out of memory (it will if it has to process too much data)
-            switch (group)
-            {
-                case 1:
-                    AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    break;
-                //case 2:
-                //    AddWithEffect(await todo.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
-                //    break;
-                default:
-                    break;
-            }
+            AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
 
             //AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
             //AddWithEffect(status.Refresh(), DisplayItem.DisplayModeEnum.Scroll);
@@ -69,11 +59,6 @@ namespace WebAPI.Controllers
             //AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
             //AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
 
-            group++;
-            if (group > numberOfGroups)
-            {
-                group = 1;
-            }
 
             return _displayItems;
         }

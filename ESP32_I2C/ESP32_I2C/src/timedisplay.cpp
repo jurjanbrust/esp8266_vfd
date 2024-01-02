@@ -36,7 +36,7 @@ void TIMEDISPLAY::start()
 {
     this->_display->clear();
     
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 3; i++)
     {
         timeClient.update();
         this->_display->home();
@@ -64,7 +64,7 @@ void TIMEDISPLAY::start()
         this->_display->home();
         this->_display->linefeed();
         this->_display->send(dayStr + " " + monthStr + " " + yearStr);
-        delay(10*1000);
+        delay(10*1000); // 10 sec
     }
 }
 
