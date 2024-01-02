@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "ESP32_I2C/ESP32_I2C"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.tcc": "cpp"
+		}
+	}
+}
