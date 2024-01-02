@@ -8,13 +8,19 @@ Display display;
 TESTDISPLAY test(display);
 TIMEDISPLAY tijd(display);
 WEBAPI api(display);
+TaskHandle_t Task1;
+#define STACK_SIZE (ESP_TASK_MAIN_STACK) // Stack size for each new thread
 
 void loop() {
-
-    api.update();
     tijd.start();
+    api.start();
+} 
 
-    delay(500);
+void apiUpdateLoop( void * parameter ) {
+    Serial.println("Starting apiUpdateLoop, pause");
+    delay(60*1000);
+    Serial.println("Starting apiUpdateLoop, pause ended");
+    api.update();
 } 
 
 void configModeCallback (WiFiManager *myWiFiManager) {
@@ -48,4 +54,7 @@ void setup() {
       Serial.println("Connected WiFi");
       Serial.println(WiFi.localIP().toString());
   }
+  api.update();
+  // Initialize your task (2nd loop)
+  // xTaskCreatePinnedToCore(apiUpdateLoop, "API", STACK_SIZE, nullptr, tskIDLE_PRIORITY+3 , &Task1, 1);
 }

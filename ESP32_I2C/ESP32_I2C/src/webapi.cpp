@@ -4,7 +4,8 @@
 #include "display.h"
 #include "time.h"
 #include "secret.h"
-#define DEBUG
+
+//#define DEBUG
 
 #ifndef DEBUG_PRINT
   #ifdef DEBUG
@@ -14,15 +15,18 @@
   #endif
 #endif
 
-StaticJsonDocument<5000> _doc;
+StaticJsonDocument<15000> _doc;
 
 String extractJsonContent(const String &input) {
-    int start = input.indexOf('[');
-    int end = input.lastIndexOf(']');
-
+    int start = input.indexOf("[{");
+    int end = input.lastIndexOf("}]");
+    DEBUG_PRINT("start: " + String(start));
+    DEBUG_PRINT("end: " + String(end));
     if (start != -1 && end != -1 && start < end) {
-        return input.substring(start, end + 1);
+      DEBUG_PRINT("input: " + input.substring(start, end + 2));
+        return input.substring(start, end + 2);
     } else {
+        DEBUG_PRINT("empty");
         return "";
     }
 }
@@ -32,17 +36,17 @@ WEBAPI::WEBAPI(Display &display)
   this->_display = &display;
   _host = azureWebAPI;
   _feed = "/display";
+
   httpsClient.setInsecure();
   httpsClient.setTimeout(10000); // 10 Seconds
 }
-
 
 void WEBAPI::update()
 {
   try
   {
     int retry = 0;
-    Serial.println("Connecting to: " + _host);
+    DEBUG_PRINT("Connecting to: " + _host);
     while ((!httpsClient.connect(_host.c_str(), 443)) && (retry < 20))
     {
       delay(100);
@@ -68,9 +72,7 @@ void WEBAPI::update()
       }
     }
 
-    DEBUG_PRINT("Body:");
     String extractedJson = extractJsonContent(httpsClient.readString());
-    DEBUG_PRINT(extractedJson);
 
     _doc.clear(); // Clears the reserved memory; see solution 2: https://arduinojson.org/v6/issues/memory-leak
     DeserializationError err = deserializeJson(_doc, extractedJson);
@@ -81,8 +83,7 @@ void WEBAPI::update()
       delay(5000);
     }
 
-    httpsClient.stop();
-
+    //httpsClient.stop();
     DEBUG_PRINT("JSON Document Size: " + _doc.size());
   }
   catch (std::exception &e)
@@ -129,10 +130,20 @@ void WEBAPI::start() {
     line1 = _doc[i]["line1"].as<String>();
     line2 = _doc[i]["line2"].as<String>();
 
+    DEBUG_PRINT("Display mode: " + String(displaymode));
+    DEBUG_PRINT("Line1: " + line1);
+    DEBUG_PRINT("Line2: " + line2); 
+
     switch (displaymode) {
-      case Normal:
-        _display->clear();
+      case HorizontalScroll:
+        _display->begin();
         _display->fixed(line1);
+        _display->carriagereturn();
+        _display->fixed(line2);
+        break;
+      case Normal:
+        _display->fixed(line1);
+        _display->carriagereturn();
         _display->fixed(line2);
         break;
       case ClearScreen:

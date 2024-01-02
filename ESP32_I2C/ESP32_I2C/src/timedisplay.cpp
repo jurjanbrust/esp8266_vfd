@@ -36,12 +36,11 @@ void TIMEDISPLAY::start()
 {
     this->_display->clear();
     
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i < 10; i++)
     {
         timeClient.update();
         this->_display->home();
         
-        String time = timeClient.getFormattedTime();
         time_t rawtime = timeClient.getEpochTime();
         struct tm* ti = localtime(&rawtime);
 
@@ -58,14 +57,25 @@ void TIMEDISPLAY::start()
         monthStr = monthNames[month - 1];
         String dayStr = ti->tm_mday < 10 ? "0" + String(ti->tm_mday) : String(ti->tm_mday);
 
+        String time = getFormattedTime(timeClient.getEpochTime());
         String dayAsText = getDayAsText(day, time);
 
         this->_display->send(dayAsText);
         this->_display->home();
         this->_display->linefeed();
         this->_display->send(dayStr + " " + monthStr + " " + yearStr);
-        delay(400); // update x times per second
+        delay(10*1000);
     }
+}
+
+String TIMEDISPLAY::getFormattedTime(unsigned long rawTime) {
+  unsigned long hours = (rawTime % 86400L) / 3600;
+  String hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
+
+  unsigned long minutes = (rawTime % 3600) / 60;
+  String minuteStr = minutes < 10 ? "0" + String(minutes) : String(minutes);
+
+  return hoursStr + ":" + minuteStr;
 }
 
 String TIMEDISPLAY::getDayAsText(int day, const String& time)

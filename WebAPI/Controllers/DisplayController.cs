@@ -40,14 +40,14 @@ namespace WebAPI.Controllers
             //RssFeed cnnWorld = new(_logger, "http://rss.cnn.com/rss/edition_world.rss", RssFeed.Display.Title, "CNN World");
             //RssFeed cnnEurope = new(_logger, "http://rss.cnn.com/rss/edition_europe.rss", RssFeed.Display.Title, "CNN Europe");
 
-            RssFeed tweakers = new(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary, "Tweakers");
-            RssFeed tech = new(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary, "Nu.nl Tech");
-            RssFeed nieuws = new(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary, "Nu.nl Nieuws");
-            M365Status status = new(_logger, "https://status.office365.com/api/feed/mac", M365Status.Display.Summary);
-            Buienradar buienradar = new(_logger, _configuration);
-            Flitsers flitsers = new(_logger, _configuration);
+            //RssFeed tweakers = new(_logger, "http://feeds.feedburner.com/tweakers/nieuws", RssFeed.Display.Summary, "Tweakers");
+            //RssFeed tech = new(_logger, "https://www.nu.nl/rss/Tech", RssFeed.Display.Summary, "Nu.nl Tech");
+            //RssFeed nieuws = new(_logger, "https://www.nu.nl/rss/Algemeen", RssFeed.Display.Summary, "Nu.nl Nieuws");
+            //M365Status status = new(_logger, "https://status.office365.com/api/feed/mac", M365Status.Display.Summary);
+            //Buienradar buienradar = new(_logger, _configuration);
+            //Flitsers flitsers = new(_logger, _configuration);
             Agenda agenda = new(_logger, _configuration);
-            Todo todo = new(_logger, _configuration);
+            //Todo todo = new(_logger, _configuration);
             
             // Only return items of the group so that the esp does not run out of memory (it will if it has to process too much data)
             switch (group)
@@ -55,19 +55,19 @@ namespace WebAPI.Controllers
                 case 1:
                     AddWithEffect(await agenda.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
                     break;
-                case 2:
-                    AddWithEffect(await todo.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
-                    break;
+                //case 2:
+                //    AddWithEffect(await todo.RefreshAsync(), DisplayItem.DisplayModeEnum.ClearScreen);
+                //    break;
                 default:
                     break;
             }
 
-            AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-            AddWithEffect(status.Refresh(), DisplayItem.DisplayModeEnum.Scroll);
-            AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-            AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-            AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
-            AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            //AddWithEffect(flitsers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            //AddWithEffect(status.Refresh(), DisplayItem.DisplayModeEnum.Scroll);
+            //AddWithEffect(buienradar.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            //AddWithEffect(tweakers.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            //AddWithEffect(tech.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
+            //AddWithEffect(nieuws.Refresh(), DisplayItem.DisplayModeEnum.ClearScreen);
 
             group++;
             if (group > numberOfGroups)
@@ -84,7 +84,7 @@ namespace WebAPI.Controllers
             if (items.Count > 0)
             {
                 //_displayItems.Add(new DisplayItem { DisplayMode = effect, Delay = 10 });
-                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen, Delay = 10 });
+                //_displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen, Delay = 10 });
                 //_displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness5, Delay = 10 });
                 // added 10 ms delay, so that the VFD can process the commands (not doing this results in # chars on the display)
             }
