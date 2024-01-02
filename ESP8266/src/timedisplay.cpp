@@ -2,7 +2,7 @@
 #include "vfd.h"
 
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "nl.pool.ntp.org", 3600 * 2, 600000);
+NTPClient timeClient(ntpUDP, "nl.pool.ntp.org");
 const String space = " ";
 const String monthNames[] = {"Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"};
 
@@ -14,21 +14,37 @@ TIMEDISPLAY::TIMEDISPLAY(VFD& vfd)
     this->_vfd->command(vfd_cursorOff);
 }
 
-int TIMEDISPLAY::isSummerTime(int day, int month, int dayOfWeek)
+int is_leap_year(int year) {
+    if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))
+        return 1;
+    return 0;
+}
+
+int last_sunday_of_month(int year, int month) {
+    int days_in_month[] = {0, 31, 28 + is_leap_year(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int day = days_in_month[month];
+
+    while (day > 0) {
+        if (day % 7 == 0) {
+            return day;
+        }
+        day--;
+    }
+
+    return -1; // Indicates an error (should not happen for valid inputs)
+}
+
+// De zomertijd loopt van de laatste zondag van maart tot de laatste zondag van oktober
+int TIMEDISPLAY::isSummerTime(int day, int month, int dayOfWeek, int year)
 {
-    // January to March and October to December are always standard time (winter)
-    if (month < 4 || (month == 10 && dayOfWeek >= 4))
-        return 1; // Standard time
+    int lastSundayOfMarch = last_sunday_of_month(year, 3);
+    int lastSundayOfOctober = last_sunday_of_month(year, 10);
+    if (month < 3 || month > 10 || (month == 3 && day <= lastSundayOfMarch) || (month == 10 && day > lastSundayOfOctober))
+    {
+        return 1; // winter time
+    }
 
-    // April to September are always daylight saving time (summer)
-    if (month > 9 || (month == 9 && dayOfWeek < 4))
-        return 2; // Daylight saving time
-
-    // From the fourth Sunday in March to the last Sunday in October, it's daylight saving time
-    if ((month == 3 && dayOfWeek == 0 && day >= 25) || (month > 3 && month < 10) || (month == 10 && dayOfWeek == 0 && day < 25))
-        return 2; // Daylight saving time
-
-    return 1; // Standard time
+    return 2; // summer time
 }
 
 void TIMEDISPLAY::start()
@@ -44,20 +60,17 @@ void TIMEDISPLAY::start()
         time_t rawtime = timeClient.getEpochTime();
         struct tm* ti = localtime(&rawtime);
 
-        int day = timeClient.getDay();
+        int dayOfweek = timeClient.getDay();
         uint16_t year = ti->tm_year + 1900;
         uint8_t month = ti->tm_mon + 1;
 
         String yearStr = String(year);
         String monthStr = month < 10 ? "0" + String(month) : String(month);
-        int multiplier = isSummerTime(ti->tm_mday, month, day);
-        
-        timeClient.setTimeOffset(3600 * multiplier);
+        timeClient.setTimeOffset(3600 * isSummerTime(ti->tm_mday, month, dayOfweek, year));
 
         monthStr = monthNames[month - 1];
         String dayStr = ti->tm_mday < 10 ? "0" + String(ti->tm_mday) : String(ti->tm_mday);
-
-        String dayAsText = getDayAsText(day, time);
+        String dayAsText = getDayAsText(dayOfweek, time);
 
         this->_vfd->send(dayAsText);
         this->_vfd->home();
@@ -68,10 +81,10 @@ void TIMEDISPLAY::start()
     }
 }
 
-String TIMEDISPLAY::getDayAsText(int day, const String& time)
+String TIMEDISPLAY::getDayAsText(int dayOfweek, const String& time)
 {
     String dayAsText;
-    switch (day)
+    switch (dayOfweek)
     {
         case 0:
             dayAsText = space + space + "Zondag" + space + time + space + space + space;
