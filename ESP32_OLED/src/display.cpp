@@ -66,7 +66,7 @@ void Display::setCursor(int x, int y) {
 
 void Display::linefeed()
 {
-  oleddisplay.setCursor(0, 17);
+  oleddisplay.println();
 }
 
 void Display::carriagereturn()

@@ -94,6 +94,59 @@ void WEBAPI::update()
   }
 }
 
+void WEBAPI::printWordWrapped(const char *str, int maxLineLength)
+{
+  int length = strlen(str);
+  int currentLength = 0;
+  String currentLine;
+
+  for (int i = 0; i < length; ++i)
+  {
+    // If the current character is not a space, add it to the current line
+    if (str[i] != ' ')
+    {
+      currentLine += str[i];
+      currentLength++;
+    }
+    else
+    {
+      // If a space is encountered, check if the next word will fit
+      int nextWordLength = 0;
+      int j = i;
+      while (str[j + 1] != ' ' && str[j + 1] != '\0')
+      {
+        nextWordLength++;
+        j++;
+      }
+
+      if (currentLength + nextWordLength <= maxLineLength)
+      {
+        // Add the space and the character to the current line
+        currentLine += ' ';
+        currentLine += str[i];
+      }
+      else
+      {
+        // Print the current line and start a new line
+        _display->fixed(currentLine);
+        _display->fixed("");
+        currentLine = "";
+        currentLength = 0;
+      }
+    }
+  }
+
+  Serial.println(String("output2: ") + String(currentLine.length()));
+
+  // Print the last line if it is not empty
+  if (currentLine.length() > 0)
+  {
+    _display->fixed(currentLine);
+  }
+}
+
+
+
 void WEBAPI::start() {
   enum mode {
     Normal,          // 0
@@ -140,14 +193,14 @@ void WEBAPI::start() {
         _display->fixed("");
         _display->fixed(line1);
         _display->fixed("");
-        _display->fixed(line2);
+        printWordWrapped(line2.c_str(), 19);
         break;
       case Normal:
         _display->home();
         _display->fixed("");
         _display->fixed(line1);
         _display->fixed("");
-        _display->fixed(line2);
+        printWordWrapped(line2.c_str(), 19);
         break;
       case ClearScreen:
         _display->clear();

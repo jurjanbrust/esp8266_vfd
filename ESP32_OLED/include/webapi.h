@@ -12,8 +12,9 @@ class WEBAPI
     WEBAPI(Display& display);
     void start();
     void update();
+    void printWordWrapped(const char *str, int maxLineLength);
 
-  private:
+private:
     Display* _display;
     TIMEDISPLAY* _time;
     WiFiClientSecure httpsClient;
