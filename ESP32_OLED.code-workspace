@@ -4,5 +4,9 @@
 			"path": "ESP32_OLED"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"*.tcc": "cpp"
+		}
+	}
 }

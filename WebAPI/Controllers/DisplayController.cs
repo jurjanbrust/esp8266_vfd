@@ -65,14 +65,11 @@ namespace WebAPI.Controllers
 
         void AddWithEffect(List<DisplayItem> items, DisplayItem.DisplayModeEnum effect)
         {
-            _displayItems.AddRange(items);
-            if (items.Count > 0)
+            items.ForEach(item =>
             {
-                //_displayItems.Add(new DisplayItem { DisplayMode = effect, Delay = 10 });
-                //_displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen, Delay = 10 });
-                //_displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.SetBrightness5, Delay = 10 });
-                // added 10 ms delay, so that the VFD can process the commands (not doing this results in # chars on the display)
-            }
+                _displayItems.Add(item);
+                _displayItems.Add(new DisplayItem { DisplayMode = DisplayItem.DisplayModeEnum.ClearScreen, Delay = 10 });
+            });
         }
     }
 }

@@ -1,29 +1,61 @@
-#include <SPI.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SH1106.h>
+#include <Arduino.h>
+#include "display.h"
+#include "test.h"
+#include "timedisplay.h"
+#include "webapi.h"
 
-#define OLED_SDA 16
-#define OLED_SCL 17
+Display oled;
+TESTDISPLAY test(oled);
+TIMEDISPLAY tijd(oled);
+WEBAPI api(oled);
+TaskHandle_t Task1;
 
-Adafruit_SH1106 display(OLED_SDA, OLED_SCL);
-
-
-void setup()   {                
-  Serial.begin(115200);
-  /* initialize OLED with I2C address 0x3C */
-  display.begin(SH1106_SWITCHCAPVCC, 0x3C); 
-  display.clearDisplay();
-
+void loop2( void * parameter) {
+  for(;;) {
+      api.update();
+      delay(60*1000);
+  }
 }
-void loop() { 
-  /* set text size, color, cursor position, 
-  set buffer with  Hello world and show off*/
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.println("Hello, world!");
-  display.display();
-  display.clearDisplay();
-  sleep(100);
+
+void loop() {
+  tijd.start();
+  oled.clear();
+  api.start();
+} 
+
+void configModeCallback (WiFiManager *myWiFiManager) {
+  oled.fixed("Entered config mode");
+  oled.fixed(myWiFiManager->getConfigPortalSSID());
+}
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println("Starting");
+  delay(1000); 
+  oled.begin();
+  oled.clear();
+  oled.home();
+  WiFiManager wifiManager;
+  wifiManager.setDebugOutput(false);
+  wifiManager.setAPCallback(configModeCallback);
+  wifiManager.autoConnect("AutoConnectAP");
+
+  while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      //oled.fixed(".");
+  }
+
+  if(WiFi.isConnected()) {
+      //oled.clear();
+      oled.fixed("Connected WiFi");
+      oled.enter();
+      oled.fixed(WiFi.localIP().toString());
+      Serial.println("Connected WiFi");
+      Serial.println(WiFi.localIP().toString());
+      delay(3000);
+      oled.clear();
+      oled.home();
+  }
+
+  xTaskCreatePinnedToCore(loop2, "API", 10000, NULL, 0 , &Task1, 1);
 }

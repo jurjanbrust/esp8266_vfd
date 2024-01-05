@@ -138,7 +138,7 @@ namespace WebAPI.Services
                     Line1 = firstLine,
                     Line2 = secondLine,
                     DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
-                    Delay = 2000
+                    Delay = 6000
                 });
             }
             return displayItems;
