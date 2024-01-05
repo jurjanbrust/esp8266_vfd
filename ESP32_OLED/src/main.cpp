@@ -12,8 +12,8 @@ TaskHandle_t Task1;
 
 void loop2( void * parameter) {
   for(;;) {
+      delay(10*60*1000);
       api.update();
-      delay(60*1000);
   }
 }
 
@@ -42,11 +42,9 @@ void setup() {
 
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
-      //oled.fixed(".");
   }
 
   if(WiFi.isConnected()) {
-      //oled.clear();
       oled.fixed("Connected WiFi");
       oled.enter();
       oled.fixed(WiFi.localIP().toString());
@@ -57,5 +55,6 @@ void setup() {
       oled.home();
   }
 
+  api.update();
   xTaskCreatePinnedToCore(loop2, "API", 10000, NULL, 0 , &Task1, 1);
 }
