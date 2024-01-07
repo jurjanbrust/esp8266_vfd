@@ -145,6 +145,7 @@ void WEBAPI::start() {
         _display->fixed(line1);
         _display->carriagereturn();
         _display->fixed(line2);
+        delay(_doc[i]["delay"].as<int>());
         break;
       case ClearScreen:
         _display->clear();
@@ -152,7 +153,5 @@ void WEBAPI::start() {
       default:
         break;
     }
-
-    delay(_doc[i]["delay"].as<int>());
   }
 }
