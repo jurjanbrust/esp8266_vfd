@@ -10,9 +10,6 @@ TIMEDISPLAY::TIMEDISPLAY(Display& display)
 {
     Serial.println("TimeDisplay started");
     this->_display = &display;
-    // timeClient.begin();
-    // this->_display->clear();
-    // delay(10000);
 }
 
 int TIMEDISPLAY::isSummerTime(int day, int month, int dayOfWeek)
@@ -36,36 +33,33 @@ void TIMEDISPLAY::start()
 {
     this->_display->clear();
     
-    for (int i = 0; i < 3; i++)
-    {
-        timeClient.update();
-        this->_display->home();
-        
-        time_t rawtime = timeClient.getEpochTime();
-        struct tm* ti = localtime(&rawtime);
+    timeClient.update();
+    this->_display->home();
+    
+    time_t rawtime = timeClient.getEpochTime();
+    struct tm* ti = localtime(&rawtime);
 
-        int day = timeClient.getDay();
-        uint16_t year = ti->tm_year + 1900;
-        uint8_t month = ti->tm_mon + 1;
+    int day = timeClient.getDay();
+    uint16_t year = ti->tm_year + 1900;
+    uint8_t month = ti->tm_mon + 1;
 
-        String yearStr = String(year);
-        String monthStr = month < 10 ? "0" + String(month) : String(month);
-        int multiplier = isSummerTime(ti->tm_mday, month, day);
-        
-        timeClient.setTimeOffset(3600 * multiplier);
+    String yearStr = String(year);
+    String monthStr = month < 10 ? "0" + String(month) : String(month);
+    int multiplier = isSummerTime(ti->tm_mday, month, day);
+    
+    timeClient.setTimeOffset(3600 * multiplier);
 
-        monthStr = monthNames[month - 1];
-        String dayStr = ti->tm_mday < 10 ? "0" + String(ti->tm_mday) : String(ti->tm_mday);
+    monthStr = monthNames[month - 1];
+    String dayStr = ti->tm_mday < 10 ? "0" + String(ti->tm_mday) : String(ti->tm_mday);
 
-        String time = getFormattedTime(timeClient.getEpochTime());
-        String dayAsText = getDayAsText(day, time);
+    String time = getFormattedTime(timeClient.getEpochTime());
+    String dayAsText = getDayAsText(day, time);
 
-        this->_display->send(dayAsText);
-        this->_display->home();
-        this->_display->linefeed();
-        this->_display->send(dayStr + " " + monthStr + " " + yearStr);
-        delay(10*1000); // 10 sec
-    }
+    this->_display->send(dayAsText);
+    this->_display->home();
+    this->_display->linefeed();
+    this->_display->send(dayStr + " " + monthStr + " " + yearStr);
+    delay(20*1000);
 }
 
 String TIMEDISPLAY::getFormattedTime(unsigned long rawTime) {
@@ -84,25 +78,25 @@ String TIMEDISPLAY::getDayAsText(int day, const String& time)
     switch (day)
     {
         case 0:
-            dayAsText = "Zondag" + space + time + space + space + space;
+            dayAsText = space + space + "Zondag" + space + time;    // 6 + 6 = 12  (16-12 = 4)
             break;
         case 1:
-            dayAsText = "Maandag" + space + time + space + space;
+            dayAsText = space + "Maandag" + space + time;   // 7 + 6 = 13  (16-13 = 3)
             break;
         case 2:
-            dayAsText = "Dinsdag" + space + time + space + space;
+            dayAsText = space + "Dinsdag" + space + time; // 7 + 6 = 13  (16-13 = 3)
             break;
         case 3:
-            dayAsText = "Woensdag" + space + time + space + space;
+            dayAsText = space + "Woensdag" + space + time; // 8 + 6 = 14  (16-14 = 2)
             break;
         case 4:
-            dayAsText = "Donderdag" + space + time + space;
+            dayAsText = "Donderdag" + space; // 9 + 6 = 15  (16-15 = 1)
             break;
         case 5:
-            dayAsText = "Vrijdag" + space + time + space + space;
+            dayAsText = space + "Vrijdag" + space + time; // 7 + 6 = 13  (16-13 = 3)
             break;
         case 6:
-            dayAsText = "Zaterdag" + space + time + space + space;
+            dayAsText = space + "Zaterdag" + space + time; //8 + 6 = 14  (16-14 = 2)
             break;
     }
     return dayAsText;

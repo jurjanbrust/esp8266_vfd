@@ -12,6 +12,7 @@ public:
   void writeBytes(uint8_t data[]);
   void writeByte(uint8_t data);
   void writeAndDelay(uint8_t *, int);
+  void setBacklight(bool on);
   void command(const char *);
   void fixed(String);
   void centered(String);
@@ -19,5 +20,6 @@ public:
   void linefeed();
   void carriagereturn();
   void home();
+  void scrollMessage(int row, String message, int delayTime, int totalColumns);
   void enter();
 };

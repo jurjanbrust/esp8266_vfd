@@ -139,7 +139,7 @@ void WEBAPI::start() {
         _display->begin();
         _display->fixed(line1);
         _display->carriagereturn();
-        _display->fixed(line2);
+        _display->scrollMessage(1, line2, 300, 16);
         break;
       case Normal:
         _display->fixed(line1);

@@ -20,6 +20,11 @@ void Display::begin() {
   lcd.setBacklight(HIGH);
 }
 
+void Display::setBacklight(bool on)
+{
+  lcd.setBacklight(on);
+}
+
 void Display::clear()
 {
   lcd.clear();
@@ -43,6 +48,18 @@ void Display::enter()
 void Display::home()
 {
   lcd.setCursor(0, 0);
+}
+
+void Display::scrollMessage(int row, String message, int delayTime, int totalColumns) {
+  for (int i=0; i < totalColumns; i++) {
+    message = " " + message;  
+  } 
+  message = message + " "; 
+  for (int position = 0; position < message.length(); position++) {
+    lcd.setCursor(0, row);
+    lcd.print(message.substring(position, position + totalColumns));
+    delay(delayTime);
+  }
 }
 
 void Display::send(String value)

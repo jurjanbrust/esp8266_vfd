@@ -200,7 +200,7 @@ void WEBAPI::start() {
         _display->fixed("");
         _display->fixed(line1);
         _display->fixed("");
-        printWordWrapped(line2.c_str(), 19);
+        printWordWrapped(line2.c_str(), 18);
         break;
       case ClearScreen:
         _display->clear();

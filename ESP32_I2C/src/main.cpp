@@ -9,11 +9,16 @@ TESTDISPLAY test(display);
 TIMEDISPLAY tijd(display);
 WEBAPI api(display);
 TaskHandle_t Task1;
-#define STACK_SIZE (ESP_TASK_MAIN_STACK) // Stack size for each new thread
+
+void loop2( void * parameter) {
+  for(;;) {
+      delay(10*60*1000);
+      api.update();
+  }
+}
 
 void loop() {
     tijd.start();
-    api.update();
     api.start();
 } 
 
@@ -42,7 +47,6 @@ void setup() {
 
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
-      display.fixed(".");
   }
 
   if(WiFi.isConnected()) {
@@ -53,7 +57,7 @@ void setup() {
       Serial.println("Connected WiFi");
       Serial.println(WiFi.localIP().toString());
   }
-  // api.update();
-  // Initialize your task (2nd loop)
-  // xTaskCreatePinnedToCore(apiUpdateLoop, "API", STACK_SIZE, nullptr, tskIDLE_PRIORITY+3 , &Task1, 1);
+  
+  api.update();
+  xTaskCreatePinnedToCore(loop2, "API", 10000, NULL, 0 , &Task1, 1);
 }
