@@ -129,15 +129,15 @@ namespace WebAPI.Services
                 string subject = item.Subject;
                 subject = Textual.CleanupText(subject);
 
-                firstLine = dag + " " + time.ToString("dd MMMM", culture).ToString().Trim();
-                secondLine = (time.ToString("HH:mm", culture).Replace("00:00", "").Replace("01:00", "").Replace("02:00", "") + " " + subject);
+                firstLine = dag + " " + time.ToString("HH:mm", culture).Replace("00:00", "").Replace("01:00", "").Replace("02:00", "");
+                secondLine = subject;
 
                 displayItems.Add(new DisplayItem
                 {
                     Date = time,
                     Line1 = firstLine,
                     Line2 = secondLine,
-                    DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
+                    DisplayMode = DisplayItem.DisplayModeEnum.Normal,
                     Delay = 6000
                 });
             }

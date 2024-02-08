@@ -32,7 +32,7 @@
         "VaultUri": "https://kv-vfd-prod.vault.azure.net/",
         "AZURE_USERNAME": "jurjanbrust@hotmail.com"
       },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+      "applicationUrl": "https://localhost:5001;http://localhost:5008"
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",

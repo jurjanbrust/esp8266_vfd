@@ -95,7 +95,7 @@ namespace WebAPI.Services
                     Date = DateTime.Now,
                     Line1 = Textual.CleanupText(firstLine),
                     Line2 = Textual.CleanupText(secondLine),
-                    DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
+                    DisplayMode = DisplayItem.DisplayModeEnum.Normal,
                     Delay = 2000
                 });
             }

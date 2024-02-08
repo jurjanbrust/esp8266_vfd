@@ -35,7 +35,7 @@ namespace WebAPI.Services
                             Date = DateTime.Now,
                             Line1 = Textual.CleanupText(String.Format("{0} op {1}", Translate(item.properties.type_description), item.properties.road)),
                             Line2 = Textual.CleanupText(String.Format("{0} {1}", item.properties.location, item.properties.direction)),
-                            DisplayMode = DisplayItem.DisplayModeEnum.HorizontalScroll,
+                            DisplayMode = DisplayItem.DisplayModeEnum.Normal,
                             Delay = 1000
                         });
                     }
